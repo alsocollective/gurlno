@@ -5,6 +5,7 @@ from easy_thumbnails.fields import ThumbnailerImageField
 class WorkMedium(models.Model):
 	medium = models.CharField(max_length=500)
 	varient_off = models.ManyToManyField('self',blank=True,null=True) 
+
 	slug = models.SlugField(blank=True)
 
 	def save(self,*args, **kwargs):
@@ -16,6 +17,7 @@ class WorkMedium(models.Model):
 
 class Tag(models.Model):
 	tag = models.CharField(max_length=500)
+
 	slug = models.SlugField(blank=True)
 
 	def save(self,*args, **kwargs):
@@ -34,10 +36,11 @@ class Artist(models.Model):
 	instagram = models.CharField(max_length=50,blank=True,null=True)
 	twitter = models.CharField(max_length=50,blank=True,null=True)
 	bio = models.TextField(max_length=1000,blank=True,null=True)
-	slug = models.SlugField(blank=True)
 	email = models.CharField(max_length=150,blank=True,null=True)	
 	phone = models.CharField(max_length=50,blank=True,null=True)
 	gallorist = models.ManyToManyField('Gallery',blank=True,null=True)
+
+	slug = models.SlugField(blank=True)
 
 	def save(self,*args, **kwargs):
 		self.slug = slugify("%s %s"%(self.first_name,self.last_name))
@@ -48,9 +51,14 @@ class Artist(models.Model):
 
 class WorkImage(models.Model):
 	title = models.CharField(max_length=500)
+	alttext = models.CharField(max_length=500)
 	Image = ThumbnailerImageField(upload_to='work-img',blank=True,null=True)
+	description = models.TextField(max_length=1000,blank=True,null=True)	
 	medium = models.ManyToManyField(WorkMedium,blank=True,null=True)
 	creator = models.ManyToManyField(Artist)
+
+	slug = models.SlugField(blank=True)
+
 	def __unicode__(self):
 		return self.slug
 
@@ -92,13 +100,14 @@ class Gallery(models.Model):
 	location = models.CharField(max_length=600,blank=True,null=True)
 	log = models.FloatField(default=0,blank=True,null=True)
 	lat = models.FloatField(default=0,blank=True,null=True)
-	slug = models.SlugField(blank=True)
 	email = models.CharField(max_length=150,blank=True,null=True)	
 	phone = models.CharField(max_length=50,blank=True,null=True)	
 	neighbourhood = models.ManyToManyField(Neighbourhood,blank=True,null=True)
 	normal_hours = models.ForeignKey(HoursOfOp)
 	google_place_key = models.CharField(max_length=50,blank=True,null=True)
 	gallorist = models.ManyToManyField(Artist,blank=True,null=True)
+
+	slug = models.SlugField(blank=True)
 
 	def save(self,*args, **kwargs):
 		self.slug = slugify(self.title)
@@ -115,6 +124,7 @@ class artType(models.Model):
 	description = models.TextField(max_length=1000)
 	includes_meediums = models.ManyToManyField(WorkMedium,blank=True,null=True)
 	tags = models.ManyToManyField(Tag,blank=True,null=True)
+
 	slug = models.SlugField(blank=True)
 
 	def save(self,*args, **kwargs):
@@ -138,8 +148,9 @@ class Event(models.Model):
 	cover = models.FloatField(default=0,blank=True,null=True)
 	description = models.TextField(max_length=1000,blank=True,null=True)
 	link = models.URLField(blank=True)
-	includes_artists = models.ManyToManyField(Artist,blank=True,null=True) 
-	includes_works = models.ManyToManyField(WorkImage,blank=True,null=True) 
+	includes_artists = models.ManyToManyField(Artist,blank=True,null=True)
+	cover_work = models.ForeignKey(WorkImage,blank=True,null=True,related_name="cover_work")
+	includes_works = models.ManyToManyField(WorkImage,blank=True,null=True,related_name='works') 
 	facebook = models.URLField(blank=True,null=True)	
 	arttype = models.ManyToManyField(artType,blank=True,null=True)
 	hours = models.ForeignKey(HoursOfOp,blank=True,null=True)
