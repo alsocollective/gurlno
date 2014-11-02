@@ -6,3 +6,8 @@ def home(request):
 	galleries = Gallery.objects.all()
 	artists = Artist.objects.all()
 	return render(request,'home.html',{"data":{"gallery":galleries,"artist":artists}})
+
+def expara(request):
+	galleries = Gallery.objects.all()
+	artists = Artist.objects.all()	
+	return render(request,'expara.html',{"data":{"gallery":galleries,"artist":artists}})

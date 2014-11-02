@@ -42,6 +42,18 @@ class WorkImage(models.Model):
 	def __unicode__(self):
 		return self.slug
 
+class Neighbourhood(models.Model):
+	title = models.CharField(max_length=300)
+	slug = models.SlugField(blank=True)
+
+	def save(self,*args, **kwargs):
+		self.slug = slugify(self.title)
+		super(Neighbourhood, self).save(*args, **kwargs)
+	
+	def __unicode__(self):
+		return self.title
+
+
 class Gallery(models.Model):
 	title = models.CharField(max_length=50)
 	logo = ThumbnailerImageField(upload_to='gal-logo',blank=True,null=True)
@@ -55,7 +67,7 @@ class Gallery(models.Model):
 	slug = models.SlugField(blank=True)
 	email = models.CharField(max_length=150,blank=True,null=True)	
 	phone = models.CharField(max_length=50,blank=True,null=True)	
-
+	neighbourhood = models.ManyToManyField(Neighbourhood,blank=True,null=True)
 
 	def save(self,*args, **kwargs):
 		self.slug = slugify(self.title)
