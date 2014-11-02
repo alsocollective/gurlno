@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load thumbnail %}
+{% block content %}
+
+	<style type="text/css">
+	html, body, #map-canvas { width:90%; height: 500px; margin: 0 auto; padding: 0;}
+	</style>
+	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD7imdWVucYfYKflHngUlR53a5sFXwhhoI"></script>
+	<script type="text/javascript">
+		// function initialize() {
+		// 	var mapOptions = {
+		// 		center: { lat: -34.397, lng: 150.644},
+		// 		zoom: 8
+		// 	};
+		// 	var map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
+		// }
+		// google.maps.event.addDomListener(window, 'load', initialize);
+		function showMap(position) {
+			console.log(position.coords.latitude, position.coords.longitude);
+		// Show a map centered at (position.coords.latitude, position.coords.longitude).
+		}
+
+		navigator.geolocation.getCurrentPosition(showMap);		
+	</script>
+
+	<div id="map-canvas"></div>
+
+
+	<h2 class="listtitle">Gallery List</h2>
+	<ul class="fullgallerylist">
+	{% for gal in data.gallery %}
+		<li>
+			<h3>{{gal.title}}</h3>
+			<img src="{{MEDIA_URL}}{{gal.logo|thumbnail_url:'avatar'}}">				
+			<img width="100px" src="{{MEDIA_URL}}{{gal.logo}}">
+		</li>
+	{% endfor %}
+	</ul>
+
+	<h2 class="listtitle">Artist List</h2>
+	<ul class="fullgallerylist">
+	{% for artist in data.artist %}
+		<li>
+			<h3>{{artist.first_name}} {{artist.last_name}}</h3>
+		</li>
+	{% endfor %}
+	</ul>	
+{% endblock %}

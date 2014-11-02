@@ -1,0 +1,15 @@
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.pyc
+*.psd
+*.json
+*.sqlite3
+*.log
+node_modules
+settings.py
+.DS_Store
+/.sass-cache
+/dev/*
+/build/*

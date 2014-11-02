@@ -1,0 +1,28 @@
+load app,
+3 tasks
+see what's new > 
+	objective : find out whats comming up
+	accomplished : news feed 
+whats happening now >
+	objective : find where things are happening, and would they enjoy it?
+	accomplished : 
+	discussion :
+		whats a higher priortiy the location or the content.
+			> location means we use map
+			> content we show images
+location of specific venue >
+	directions from currentl location... not really needed...
+
+what is really important is goal 1 and 2
+
+IDEA:
+	search
+	brows all current 	- shows
+						- artist
+						- galleries
+
+	map kept map in nav bar, with row and column of gallery openings,
+	image 		- backgorund centered large
+	title 		- name of show
+	location	- name of general location
+
