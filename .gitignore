@@ -13,3 +13,5 @@ settings.py
 /.sass-cache
 /dev/*
 /build/*
+public_html
+public

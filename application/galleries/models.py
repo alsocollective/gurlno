@@ -14,6 +14,17 @@ class WorkMedium(models.Model):
 	def __unicode__(self):
 		return self.medium
 
+class Tag(models.Model):
+	tag = models.CharField(max_length=500)
+	slug = models.SlugField(blank=True)
+
+	def save(self,*args, **kwargs):
+		self.slug = slugify(self.tag)
+		super(Tag, self).save(*args, **kwargs)
+	
+	def __unicode__(self):
+		return self.slug
+
 class Artist(models.Model):
 	first_name = models.CharField(max_length=50)
 	last_name = models.CharField(max_length=50)
@@ -25,7 +36,8 @@ class Artist(models.Model):
 	bio = models.TextField(max_length=1000,blank=True,null=True)
 	slug = models.SlugField(blank=True)
 	email = models.CharField(max_length=150,blank=True,null=True)	
-	phone = models.CharField(max_length=50,blank=True,null=True)	
+	phone = models.CharField(max_length=50,blank=True,null=True)
+	gallorist = models.ManyToManyField('Gallery',blank=True,null=True)
 
 	def save(self,*args, **kwargs):
 		self.slug = slugify("%s %s"%(self.first_name,self.last_name))
@@ -53,11 +65,27 @@ class Neighbourhood(models.Model):
 	def __unicode__(self):
 		return self.title
 
+class HoursOfOp(models.Model):
+	mon_start = models.DateTimeField(blank=True,null=True)
+	mon_end = models.DateTimeField(blank=True,null=True)
+	tue_start = models.DateTimeField(blank=True,null=True)
+	tue_end = models.DateTimeField(blank=True,null=True)
+	wed_start = models.DateTimeField(blank=True,null=True)
+	wed_end = models.DateTimeField(blank=True,null=True)
+	thu_start = models.DateTimeField(blank=True,null=True)
+	thu_end = models.DateTimeField(blank=True,null=True)
+	fri_start = models.DateTimeField(blank=True,null=True)
+	fri_end = models.DateTimeField(blank=True,null=True)
+	sat_start = models.DateTimeField(blank=True,null=True)
+	sat_end = models.DateTimeField(blank=True,null=True)
+	sun_start = models.DateTimeField(blank=True,null=True)
+	sun_end = models.DateTimeField(blank=True,null=True)
 
 class Gallery(models.Model):
 	title = models.CharField(max_length=50)
 	logo = ThumbnailerImageField(upload_to='gal-logo',blank=True,null=True)
 	url =  models.URLField(blank=True,null=True)
+	description = models.TextField(max_length=1000)
 	facebook = models.URLField(blank=True,null=True)	
 	instagram = models.CharField(max_length=50,blank=True,null=True)
 	twitter = models.CharField(max_length=50,blank=True,null=True)	
@@ -68,6 +96,9 @@ class Gallery(models.Model):
 	email = models.CharField(max_length=150,blank=True,null=True)	
 	phone = models.CharField(max_length=50,blank=True,null=True)	
 	neighbourhood = models.ManyToManyField(Neighbourhood,blank=True,null=True)
+	normal_hours = models.ForeignKey(HoursOfOp)
+	google_place_key = models.CharField(max_length=50,blank=True,null=True)
+	gallorist = models.ManyToManyField(Artist,blank=True,null=True)
 
 	def save(self,*args, **kwargs):
 		self.slug = slugify(self.title)
@@ -75,12 +106,15 @@ class Gallery(models.Model):
 
 	def __unicode__(self):
 		return self.title
+	class Meta:
+		verbose_name_plural = "Galleries"
 
 class artType(models.Model):
 	title = models.CharField(max_length=150)	
 	logo = ThumbnailerImageField(upload_to='art-icon')
 	description = models.TextField(max_length=1000)
-	includes_meediums = models.ManyToManyField(WorkMedium,blank=True,null=True) 
+	includes_meediums = models.ManyToManyField(WorkMedium,blank=True,null=True)
+	tags = models.ManyToManyField(Tag,blank=True,null=True)
 	slug = models.SlugField(blank=True)
 
 	def save(self,*args, **kwargs):
@@ -89,7 +123,10 @@ class artType(models.Model):
 
 	def __unicode__(self):
 		return self.title
-		
+
+class Day(models.Model):
+	start = models.DateTimeField(blank=True,null=True)
+	end = models.DateTimeField(blank=True,null=True)
 
 class Event(models.Model):
 	title = models.CharField(max_length=150)	
@@ -105,7 +142,10 @@ class Event(models.Model):
 	includes_works = models.ManyToManyField(WorkImage,blank=True,null=True) 
 	facebook = models.URLField(blank=True,null=True)	
 	arttype = models.ManyToManyField(artType,blank=True,null=True)
-	slug = models.SlugField(blank=True)	
+	hours = models.ForeignKey(HoursOfOp,blank=True,null=True)
+	days_showing = models.ManyToManyField(Day,blank=True,null=True)
+
+	slug = models.SlugField(blank=True)
 	def __unicode__(self):
 		return self.title	
 

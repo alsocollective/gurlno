@@ -7,3 +7,8 @@ admin.site.register(Event)
 admin.site.register(WorkMedium)
 admin.site.register(Artist)
 admin.site.register(WorkImage)
+admin.site.register(Neighbourhood)
+admin.site.register(HoursOfOp)
+admin.site.register(Day)
+
+
