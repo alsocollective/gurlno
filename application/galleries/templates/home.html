@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load thumbnail %}
+{% block content %}
+
+	<h2 class="listtitle">Gallery List</h2>
+	<ul class="fullgallerylist">
+	{% for gal in data.gallery %}
+		<li>
+			<h3>{{gal.title}}</h3>
+			<img src="{{MEDIA_URL}}{{gal.logo|thumbnail_url:'avatar'}}">				
+			<img width="100px" src="{{MEDIA_URL}}{{gal.logo}}">
+		</li>
+	{% endfor %}
+	</ul>
+
+	<h2 class="listtitle">Artist List</h2>
+	<ul class="fullgallerylist">
+	{% for artist in data.artist %}
+		<li>
+			<h3>{{artist.first_name}} {{artist.last_name}}</h3>
+		</li>
+	{% endfor %}
+	</ul>	
+{% endblock %}
