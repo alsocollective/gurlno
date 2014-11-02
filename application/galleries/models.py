@@ -60,7 +60,7 @@ class WorkImage(models.Model):
 	slug = models.SlugField(blank=True)
 
 	def __unicode__(self):
-		return self.slug
+		return self.title
 
 class Neighbourhood(models.Model):
 	title = models.CharField(max_length=300)
