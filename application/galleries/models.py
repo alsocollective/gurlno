@@ -85,21 +85,7 @@ class Neighbourhood(models.Model):
 	def __unicode__(self):
 		return self.title
 
-class HoursOfOp(models.Model):
-	mon_start = models.TimeField(blank=True,null=True)
-	mon_end = models.TimeField(blank=True,null=True)
-	tue_start = models.TimeField(blank=True,null=True)
-	tue_end = models.TimeField(blank=True,null=True)
-	wed_start = models.TimeField(blank=True,null=True)
-	wed_end = models.TimeField(blank=True,null=True)
-	thu_start = models.TimeField(blank=True,null=True)
-	thu_end = models.TimeField(blank=True,null=True)
-	fri_start = models.TimeField(blank=True,null=True)
-	fri_end = models.TimeField(blank=True,null=True)
-	sat_start = models.TimeField(blank=True,null=True)
-	sat_end = models.TimeField(blank=True,null=True)
-	sun_start = models.TimeField(blank=True,null=True)
-	sun_end = models.TimeField(blank=True,null=True)
+
 
 class Gallery(models.Model):
 	title = models.CharField(max_length=50)
@@ -115,7 +101,6 @@ class Gallery(models.Model):
 	email = models.CharField(max_length=150,blank=True,null=True)	
 	phone = models.CharField(max_length=50,blank=True,null=True)	
 	neighbourhood = models.ManyToManyField(Neighbourhood,blank=True,null=True)
-	normal_hours = models.ForeignKey(HoursOfOp,blank=True,null=True)
 	google_place_key = models.CharField(max_length=50,blank=True,null=True)
 	gallorist = models.ManyToManyField(Gallorist,blank=True,null=True)
 
@@ -129,6 +114,23 @@ class Gallery(models.Model):
 		return self.title
 	class Meta:
 		verbose_name_plural = "Galleries"
+		
+class HoursOfOp(models.Model):
+	parent = models.ForeignKey(Gallery,blank=True,null=True)
+	mon_start = models.TimeField(blank=True,null=True)
+	mon_end = models.TimeField(blank=True,null=True)
+	tue_start = models.TimeField(blank=True,null=True)
+	tue_end = models.TimeField(blank=True,null=True)
+	wed_start = models.TimeField(blank=True,null=True)
+	wed_end = models.TimeField(blank=True,null=True)
+	thu_start = models.TimeField(blank=True,null=True)
+	thu_end = models.TimeField(blank=True,null=True)
+	fri_start = models.TimeField(blank=True,null=True)
+	fri_end = models.TimeField(blank=True,null=True)
+	sat_start = models.TimeField(blank=True,null=True)
+	sat_end = models.TimeField(blank=True,null=True)
+	sun_start = models.TimeField(blank=True,null=True)
+	sun_end = models.TimeField(blank=True,null=True)
 
 class artType(models.Model):
 	title = models.CharField(max_length=150)	
@@ -172,6 +174,7 @@ class Show(models.Model):
 	hours = models.ForeignKey(HoursOfOp,blank=True,null=True)
 	days_showing = models.ManyToManyField(Day,blank=True,null=True)
 	currator = models.ManyToManyField(Gallorist,blank=True,null=True)
+	tags = models.ManyToManyField(Tag,blank=True,null=True)
 
 	slug = models.SlugField(blank=True)
 	def __unicode__(self):
