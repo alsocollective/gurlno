@@ -17,7 +17,6 @@ class WorkMedium(models.Model):
 
 class Tag(models.Model):
 	tag = models.CharField(max_length=500)
-
 	slug = models.SlugField(blank=True)
 
 	def save(self,*args, **kwargs):
@@ -38,7 +37,6 @@ class Artist(models.Model):
 	bio = models.TextField(max_length=1000,blank=True,null=True)
 	email = models.CharField(max_length=150,blank=True,null=True)	
 	phone = models.CharField(max_length=50,blank=True,null=True)
-	gallorist = models.ManyToManyField('Gallery',blank=True,null=True)
 
 	slug = models.SlugField(blank=True)
 
@@ -48,6 +46,20 @@ class Artist(models.Model):
 	
 	def __unicode__(self):
 		return self.slug
+
+class Gallorist(models.Model):
+	prefix = models.CharField(max_length=50)
+	first_name = models.CharField(max_length=50)
+	last_name = models.CharField(max_length=50)	
+	artist = models.ForeignKey(Artist,blank=True,null=True)
+	slug = models.SlugField(blank=True)
+
+	def save(self,*args, **kwargs):
+		self.slug = slugify("%s %s %s"%(self.prefix,self.first_name,self.last_name))
+		super(Gallorist, self).save(*args, **kwargs)
+	
+	def __unicode__(self):
+		return self.slug	
 
 class WorkImage(models.Model):
 	title = models.CharField(max_length=500)
@@ -74,20 +86,20 @@ class Neighbourhood(models.Model):
 		return self.title
 
 class HoursOfOp(models.Model):
-	mon_start = models.DateTimeField(blank=True,null=True)
-	mon_end = models.DateTimeField(blank=True,null=True)
-	tue_start = models.DateTimeField(blank=True,null=True)
-	tue_end = models.DateTimeField(blank=True,null=True)
-	wed_start = models.DateTimeField(blank=True,null=True)
-	wed_end = models.DateTimeField(blank=True,null=True)
-	thu_start = models.DateTimeField(blank=True,null=True)
-	thu_end = models.DateTimeField(blank=True,null=True)
-	fri_start = models.DateTimeField(blank=True,null=True)
-	fri_end = models.DateTimeField(blank=True,null=True)
-	sat_start = models.DateTimeField(blank=True,null=True)
-	sat_end = models.DateTimeField(blank=True,null=True)
-	sun_start = models.DateTimeField(blank=True,null=True)
-	sun_end = models.DateTimeField(blank=True,null=True)
+	mon_start = models.TimeField(blank=True,null=True)
+	mon_end = models.TimeField(blank=True,null=True)
+	tue_start = models.TimeField(blank=True,null=True)
+	tue_end = models.TimeField(blank=True,null=True)
+	wed_start = models.TimeField(blank=True,null=True)
+	wed_end = models.TimeField(blank=True,null=True)
+	thu_start = models.TimeField(blank=True,null=True)
+	thu_end = models.TimeField(blank=True,null=True)
+	fri_start = models.TimeField(blank=True,null=True)
+	fri_end = models.TimeField(blank=True,null=True)
+	sat_start = models.TimeField(blank=True,null=True)
+	sat_end = models.TimeField(blank=True,null=True)
+	sun_start = models.TimeField(blank=True,null=True)
+	sun_end = models.TimeField(blank=True,null=True)
 
 class Gallery(models.Model):
 	title = models.CharField(max_length=50)
@@ -97,15 +109,15 @@ class Gallery(models.Model):
 	facebook = models.URLField(blank=True,null=True)	
 	instagram = models.CharField(max_length=50,blank=True,null=True)
 	twitter = models.CharField(max_length=50,blank=True,null=True)	
-	location = models.CharField(max_length=600,blank=True,null=True)
+	address = models.CharField(max_length=600,blank=True,null=True)
 	log = models.FloatField(default=0,blank=True,null=True)
 	lat = models.FloatField(default=0,blank=True,null=True)
 	email = models.CharField(max_length=150,blank=True,null=True)	
 	phone = models.CharField(max_length=50,blank=True,null=True)	
 	neighbourhood = models.ManyToManyField(Neighbourhood,blank=True,null=True)
-	normal_hours = models.ForeignKey(HoursOfOp)
+	normal_hours = models.ForeignKey(HoursOfOp,blank=True,null=True)
 	google_place_key = models.CharField(max_length=50,blank=True,null=True)
-	gallorist = models.ManyToManyField(Artist,blank=True,null=True)
+	gallorist = models.ManyToManyField(Gallorist,blank=True,null=True)
 
 	slug = models.SlugField(blank=True)
 
@@ -138,13 +150,17 @@ class Day(models.Model):
 	start = models.DateTimeField(blank=True,null=True)
 	end = models.DateTimeField(blank=True,null=True)
 
-class Event(models.Model):
+class Show(models.Model):
 	title = models.CharField(max_length=150)	
 	gallery = models.ForeignKey(Gallery)
-	date_start = models.DateTimeField()
-	date_end = models.DateTimeField()
-	opening_start = models.DateTimeField()
-	opening_end = models.DateTimeField()
+	date_start = models.DateField(blank=True,null=True)
+	date_start_time = models.TimeField(blank=True,null=True)
+	date_end = models.DateField(blank=True,null=True)
+	date_end_time = models.TimeField(blank=True,null=True)
+	opening_start = models.DateField(blank=True,null=True)
+	opening_start_time = models.TimeField(blank=True,null=True)
+	opening_end = models.DateField(blank=True,null=True)
+	opening_end_time = models.TimeField(blank=True,null=True)
 	cover = models.FloatField(default=0,blank=True,null=True)
 	description = models.TextField(max_length=1000,blank=True,null=True)
 	link = models.URLField(blank=True)
@@ -155,6 +171,7 @@ class Event(models.Model):
 	arttype = models.ManyToManyField(artType,blank=True,null=True)
 	hours = models.ForeignKey(HoursOfOp,blank=True,null=True)
 	days_showing = models.ManyToManyField(Day,blank=True,null=True)
+	currator = models.ManyToManyField(Gallorist,blank=True,null=True)
 
 	slug = models.SlugField(blank=True)
 	def __unicode__(self):
@@ -162,5 +179,5 @@ class Event(models.Model):
 
 	def save(self,*args, **kwargs):
 		self.slug = slugify(self.title)
-		super(Event, self).save(*args, **kwargs)
+		super(Show, self).save(*args, **kwargs)
 
