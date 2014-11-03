@@ -1,5 +1,12 @@
 load app,
 3 tasks
+
+++ MOBILE TASKS ++
+
+"What is happening now?"
+
+*Near me?
+
 see what's new > 
 	objective : find out whats comming up
 	accomplished : news feed 
@@ -14,6 +21,13 @@ location of specific venue >
 	directions from currentl location... not really needed...
 
 what is really important is goal 1 and 2
+
+
+++ DESKTOP TASKS ++
+
+"What is happening this week, or on the weekend so I can plan?"
+
+
 
 IDEA:
 	search
