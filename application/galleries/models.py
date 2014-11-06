@@ -85,7 +85,18 @@ class Neighbourhood(models.Model):
 	def __unicode__(self):
 		return self.title
 
+class Gallery_Type(models.Model):
+	title = models.CharField(max_length=300)
+	description = models.TextField(max_length=1000,blank=True,null=True)	
+	image = ThumbnailerImageField(upload_to='gallery-type',blank=True,null=True)
+	slug = models.SlugField(blank=True)
 
+	def save(self,*args, **kwargs):
+		self.slug = slugify(self.title)
+		super(Gallery_Type, self).save(*args, **kwargs)
+	
+	def __unicode__(self):
+		return self.title
 
 class Gallery(models.Model):
 	title = models.CharField(max_length=50)
@@ -103,6 +114,8 @@ class Gallery(models.Model):
 	neighbourhood = models.ManyToManyField(Neighbourhood,blank=True,null=True)
 	google_place_key = models.CharField(max_length=50,blank=True,null=True)
 	gallorist = models.ManyToManyField(Gallorist,blank=True,null=True)
+	gallery_tyle = models.ManyToManyField(Gallery_Type,blank=True,null=True)
+
 
 	slug = models.SlugField(blank=True)
 
