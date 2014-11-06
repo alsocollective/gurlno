@@ -18,7 +18,7 @@ class gal_admin(admin.ModelAdmin):
 		('',{
 			'fields':[
 				("title","logo"),
-				("description","gallorist"),
+				("description","gallorist","gallery_tyle"),
 				("url","facebook","instagram","twitter",),
 				("address","log","lat","neighbourhood","google_place_key"),
 				("phone","email",)
@@ -86,3 +86,4 @@ admin.site.register(HoursOfOp)
 admin.site.register(Day)
 admin.site.register(Tag)
 admin.site.register(Gallorist)
+admin.site.register(Gallery_Type)
