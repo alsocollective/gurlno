@@ -16,3 +16,17 @@ def expara(request):
 	galleries = Gallery.objects.all()
 	artists = Artist.objects.all()	
 	return render(request,'expara.html',{"data":{"gallery":galleries,"artist":artists}})
+
+def gallerylist(request):
+	if request.user.is_authenticated():
+		galleries = Gallery.objects.all()
+		return render(request,'list/gallery.html',{"data":{"gallery":galleries}})
+	else:
+		return redirect('/login')
+
+def showlist(request):
+	if request.user.is_authenticated():
+		shows = Show.objects.all()
+		return render(request,'list/shows.html',{"data":{"shows":shows}})
+	else:
+		return redirect('/login')	

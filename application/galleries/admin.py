@@ -49,6 +49,7 @@ class show_admin(admin.ModelAdmin):
 
 			]}),
 		]
+	filter_horizontal = ('includes_artists',)
 
 class artist_admin(admin.ModelAdmin):
 	fieldsets = [

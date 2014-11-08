@@ -197,3 +197,12 @@ class Show(models.Model):
 		self.slug = slugify(self.title)
 		super(Show, self).save(*args, **kwargs)
 
+from  django.views.generic.detail import DetailView
+
+class ShowDetailView(DetailView):
+	model = Show
+	def get_context_data(self, **kwargs):
+		context = super(ShowDetailView, self).get_context_data(**kwargs)
+		print context
+		context['now'] = timezone.now()
+		return context
