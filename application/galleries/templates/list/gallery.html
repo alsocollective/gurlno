@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load thumbnail %}
+{% block content %}
+<h1>Galleries</h1>
+<ul>
+{% for gal in data.gallery %}
+	<li>
+		{{gal}} - <a href="/gallery/{{gal.slug}}/">local</a> - <a href="{{gal.url}}">link</a>		
+	</li>
+{% endfor %}
+</ul>
+
+{% endblock %}

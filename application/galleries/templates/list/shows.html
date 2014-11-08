@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load thumbnail %}
+{% block content %}
+<h1>Shows</h1>
+<ul>
+{% for shows in data.shows %}
+	<li>
+		{{shows}} {% if shows.link %}- <a href="{{shows.link}}">link</a>{% endif %}
+	</li>
+{% endfor %}
+</ul>
+
+{% endblock %}
