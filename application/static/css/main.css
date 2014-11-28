@@ -1,2 +1,1 @@
-html,body{padding:0;margin:0}li{list-style:none}
-/*# sourceMappingURL=main.css.map */
+html,body{padding:0;margin:0;font-family:sans-serif}li{list-style:none}.time{padding:10px 0;margin:10px;border:solid black 1px;display:inline-block}.time .date-time{padding:0 10px;display:block}.time .date-time:nth-child(2n){background:#eee}.time .date-time.notopen{color:#900}

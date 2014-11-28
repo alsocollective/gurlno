@@ -30,3 +30,19 @@ def showlist(request):
 		return render(request,'list/shows.html',{"data":{"shows":shows}})
 	else:
 		return redirect('/login')	
+
+def gallery(request,slug):
+	if not request.user.is_authenticated():
+		return redirect('/login')
+
+	try:
+		gallery = Gallery.objects.get(slug=slug)
+		time = HoursOfOp.objects.get(parent=gallery)
+		shows = Show.objects.filter(gallery=gallery)
+	except Exception, e:
+		return HttpResponse("not much")
+		pass
+
+	print gallery
+	print time
+	return render(request,'gallery.html',{"gal":gallery,"time":time,"shows":shows})

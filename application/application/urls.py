@@ -14,7 +14,7 @@ urlpatterns = patterns('',
 	url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'registration/login.html'}),
     url(r'^galleries/$','galleries.views.gallerylist',name='gal_list'),
     url(r'^shows/$','galleries.views.showlist',name='show_list'),
-    url(r'^gallery/(?P<slug>[-_\w]+)/$', ShowDetailView.as_view(),name="gallery-detail"),
+    url(r'^gallery/(?P<slug>[-_\w]+)/$', 'galleries.views.gallery',name="gallery-detail"),
 
     url(r'^admin/', include(admin.site.urls)),
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
