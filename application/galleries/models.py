@@ -165,6 +165,20 @@ class Day(models.Model):
 	start = models.DateTimeField(blank=True,null=True)
 	end = models.DateTimeField(blank=True,null=True)
 
+	title = models.CharField(max_length=150,blank=True,null=True)
+	description = models.TextField(max_length=1000,blank=True,null=True)
+	slug = models.SlugField(blank=True)
+
+	def save(self,*args, **kwargs):
+		if(self.title):
+			self.slug = slugify(self.title)
+		else:
+			self.slug = "no-title"
+		super(Day, self).save(*args, **kwargs)
+
+	def __unicode__(self):
+		return self.title
+
 class Show(models.Model):
 	title = models.CharField(max_length=150)	
 	gallery = models.ForeignKey(Gallery)
