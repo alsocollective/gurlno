@@ -3,7 +3,13 @@ html,body{
 	margin: 0;
 	font-family: sans-serif;
 }
+ul{
+	margin: 0;
+	padding: 0;
+}
 li{
+	margin: 0;
+	padding: 0;	
 	list-style: none;
 }
 
@@ -21,5 +27,32 @@ li{
 		&.notopen{
 			color: #900;
 		}
+	}
+}
+
+
+
+
+
+
+
+#current-time-bar{
+	background: #f00;
+	height: 20px;
+	width: 90%;
+	margin-left: 5%;
+	position: relative;
+	.goodTimes{
+		position: absolute;
+		height: 20px;
+		background: #0f0;
+		top: 0;
+	}
+	.curTime{
+		position: absolute;
+		top: 0;
+		width: 2px;
+		height: 20px;
+		background: #000;
 	}
 }

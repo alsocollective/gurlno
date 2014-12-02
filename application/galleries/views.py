@@ -46,3 +46,25 @@ def gallery(request,slug):
 	print gallery
 	print time
 	return render(request,'gallery.html',{"gal":gallery,"time":time,"shows":shows})
+
+
+def gswipelist(request):
+	if not request.user.is_authenticated():
+		return redirect('/login')
+
+	galleries = Gallery.objects.all()
+	time = HoursOfOp.objects.all()
+	return render(request,'list/swipegallery.html',{"gallery":galleries,"time":time})	
+
+
+
+
+
+
+
+
+
+
+
+
+

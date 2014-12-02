@@ -16,5 +16,8 @@ urlpatterns = patterns('',
     url(r'^shows/$','galleries.views.showlist',name='show_list'),
     url(r'^gallery/(?P<slug>[-_\w]+)/$', 'galleries.views.gallery',name="gallery-detail"),
 
+    url(r'^gswipelist/$','galleries.views.gswipelist',name='gal_list'),
+
+
     url(r'^admin/', include(admin.site.urls)),
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
