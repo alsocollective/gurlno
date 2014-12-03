@@ -3,7 +3,7 @@ html,body{
 	margin: 0;
 	font-family: sans-serif;
 }
-ul{
+ul,h2,h3{
 	margin: 0;
 	padding: 0;
 }
@@ -36,7 +36,8 @@ li{
 
 
 
-#current-time-bar{
+.time-bar{
+
 	background: #f00;
 	height: 20px;
 	width: 90%;
