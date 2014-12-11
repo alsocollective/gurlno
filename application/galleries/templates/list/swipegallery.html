@@ -4,40 +4,34 @@
 {% load static %}
 
 {% block content %}
-<h1>Galleries</h1>
+<div id="macontainer">
+	<h2>map</h2>
+</div>
+<div id="gallerycontainer">
+	<div id="gallerynav">
+		<div id="galleryhamberger">
+		</div><ul>
+			<li><a href="#alpha">Alpha</a></li><li>
+			<a href="#open">Open</a></li><li>
+			<a href="#recep">Recep.</a></li><li>
+			<a href="#prox">Prox.</a></li>			
+		</ul>
+	</div>
 <div id="gallerylist">
 
 </div>
+</div>
 
-<!--
-	<li id="current-time-bar"></li>
-{% for gal in gallery %}
-	<li class="gallery">
-		{{gal}} - <a href="/gallery/{{gal.slug}}/">local</a> - <a href="{{gal.url}}">link</a>
-	</li>
-{% endfor %}
--->
 
 {% endblock %}
 
-
-x	
-
 {% block other %}
-<script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.13/d3.min.js" charset="utf-8"></script>
+<script src="{% static "js/lib/d3.3.4.13.js" %}" charset="utf-8"></script>
 
 <script type="text/javascript" src="{% static "js/pages/galswipe.js" %}"></script>
 <script type="text/javascript">
 
 var viz = VisualzierContstructor();
-
-var data = [
-{% for gal in gallery %}{
-	"title":"{{gal}}",
-	"time":{% for curTime in time %}{% if curTime.parent == gal %}{{curTime|timeAsJsonObject}}{% endif %}{% endfor %}
-},{% endfor %}	
-]
-
-viz.init(data);
+viz.init();
 
 </script>{% endblock %}

@@ -2,6 +2,10 @@ from django.shortcuts import render, render_to_response, get_object_or_404, redi
 from django.http import HttpResponse
 from django.contrib.auth import authenticate
 from galleries.models import *
+from django.core import serializers
+from django.forms.models import model_to_dict
+
+import json
 
 def home(request):
 	if request.user.is_authenticated():
@@ -42,20 +46,39 @@ def gallery(request,slug):
 	except Exception, e:
 		return HttpResponse("not much")
 		pass
-
-	print gallery
-	print time
 	return render(request,'gallery.html',{"gal":gallery,"time":time,"shows":shows})
 
 
 def gswipelist(request):
 	if not request.user.is_authenticated():
 		return redirect('/login')
+	return render(request,'list/swipegallery.html')	
 
+def getShow(gallery):
+	try:
+		return Show.objects.filter(gallery=gallery)[0].title
+	except Exception:
+		return None
+def getTime(gallery):
+	try:
+		return json.loads(serializers.serialize("json",HoursOfOp.objects.filter(parent = gallery)))[0]["fields"]
+	except Exception,e:
+		return None
+
+def galJsonSimple(request):
+	if not request.user.is_authenticated():
+		return redirect('/login')
+
+	out = []
 	galleries = Gallery.objects.all()
-	time = HoursOfOp.objects.all()
-	return render(request,'list/swipegallery.html',{"gallery":galleries,"time":time})	
+	for gal in galleries:
+		out.append({ 
+			'gal': gal.title,
+			'time': getTime(gal),
+			'show' : getShow(gal)
+			})
 
+	return HttpResponse(json.dumps(out), content_type="application/json")
 
 
 

@@ -3,7 +3,7 @@ html,body{
 	margin: 0;
 	font-family: sans-serif;
 }
-ul,h2,h3{
+ul,h2,h3,h4{
 	margin: 0;
 	padding: 0;
 }
@@ -32,28 +32,66 @@ li{
 
 
 
+#macontainer{
+	width:60%;
+	left:0;
+	top:0;
+	position:absolute;
+}
 
+#gallerycontainer{
+	width:40%;
+	left:60%;
+	top:0;
+	position:absolute;
 
-
-
-.time-bar{
-
-	background: #f00;
-	height: 20px;
-	width: 90%;
-	margin-left: 5%;
-	position: relative;
-	.goodTimes{
-		position: absolute;
-		height: 20px;
-		background: #0f0;
-		top: 0;
-	}
-	.curTime{
-		position: absolute;
-		top: 0;
-		width: 2px;
-		height: 20px;
+	#gallerynav{
 		background: #000;
+		margin-bottom: 1em;
+		#galleryhamberger{
+			width: 20%;
+			display: inline-block;
+		}
+		ul{
+			display: inline-block;
+			width: 80%;
+		}
+		li{
+			display: inline-block;
+			width: 25%;
+			text-align: center;
+			a{	
+				font-size: 0.8em;
+				color: #fff;
+				text-transform: uppercase;
+				font-weight: bolder;
+				text-decoration: none;
+				display: inline-block;
+				padding: 1em 0 0.5em 0;
+			}
+		}
+	}
+
+	#gallerylist{
+		li{
+			position: relative;
+			margin-bottom:0.5em;
+		}
+		.goodTimes{
+			position: absolute;
+			height: 100%;
+			background: rgba(0,0,0,0.15);
+			top: 0;
+		}
+		h3,h4{
+			position: relative;
+		}
+		h4{
+			font-size: 0.8em;
+		}
+		.showtitle{
+			padding-bottom:0.25em;
+		}
+		
 	}
 }

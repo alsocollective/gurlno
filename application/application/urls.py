@@ -17,6 +17,7 @@ urlpatterns = patterns('',
     url(r'^gallery/(?P<slug>[-_\w]+)/$', 'galleries.views.gallery',name="gallery-detail"),
 
     url(r'^gswipelist/$','galleries.views.gswipelist',name='gal_list'),
+    url(r'^galjsonsimp','galleries.views.galJsonSimple',name="gal_json"),
 
 
     url(r'^admin/', include(admin.site.urls)),
