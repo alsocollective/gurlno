@@ -56,7 +56,14 @@ def gswipelist(request):
 
 def getShow(gallery):
 	try:
-		return Show.objects.filter(gallery=gallery)[0].title
+		now = datetime.datetime.now().date()
+		show = Show.objects.filter(gallery=gallery,date_start__lt=now,date_end__gt=now)		
+		if(len(show) == 0):
+			show = "noshow"
+		else:
+			show = json.loads(serializers.serialize("json",show))[0]["fields"]
+		return show
+		# return Show.objects.filter(gallery=gallery)[0].title
 	except Exception:
 		return None
 def getTime(gallery):

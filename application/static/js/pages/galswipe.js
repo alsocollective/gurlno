@@ -44,9 +44,15 @@ function VisualzierContstructor() {
 			timeCovert = this.hoursAndMinToFloat;
 
 		var max = d3.min(that.data, function(d) {
+			if (!d["time"][day + "start"]) {
+				return false;
+			}
 			return timeCovert(d["time"][day + "start"]);
 		});
 		var min = d3.max(that.data, function(d) {
+			if (!d["time"][day + "end"]) {
+				return false;
+			}
 			return timeCovert(d["time"][day + "end"]);
 		});
 		this.settings.maxDay = max;
@@ -54,7 +60,7 @@ function VisualzierContstructor() {
 
 		// REMOVE THIS !@#$	@NASKGN AWIONT Q	@#NT ONzxcgvb
 		// REMOVE THIS !@#$	@NASKGN AWIONT Q	@#NT ONzxcgvb
-		out.settings.curTime = out.settings.curTime - 5
+		out.settings.curTime = out.settings.curTime
 		// REMOVE THIS !@#$	@NASKGN AWIONT Q	@#NT ONzxcgvb
 		// REMOVE THIS !@#$	@NASKGN AWIONT Q	@#NT ONzxcgvb
 		var offSetOfTime = 0;
@@ -85,14 +91,14 @@ function VisualzierContstructor() {
 			.append("div")
 			.attr("class", "goodTimes")
 			.style("left", function(d) {
-				if (d["time"][day + "start"] == "None") {
+				if (!d["time"][day + "start"]) {
 					return 0;
 				}
 				var time = timeCovert(d["time"][day + "start"])
 				return ((time - max - offSetOfTime) / (min - max) * 100) + "%";
 			})
 			.style("width", function(d) {
-				if (d["time"][day + "start"] == "None") {
+				if (!d["time"][day + "start"]) {
 					return 0;
 				}
 				var startTime = timeCovert(d["time"][day + "start"])
@@ -104,9 +110,15 @@ function VisualzierContstructor() {
 			return d.gal;
 		}).attr("class", "gallerytitle");
 		listItems.append('h4').text(function(d) {
-			return d.show || "-";
+			if (d.show == "noshow") {
+				return "no current show";
+			}
+			return d.show.title;
 		}).attr("class", "showtitle");
 		listItems.append("h4").text(function(d) {
+			if (!d["time"][day + "start"]) {
+				return "closed"
+			}
 			return d["time"][day + "start"].substring(0, 5) + " until " + d["time"][day + "end"].substring(0, 5)
 		}).attr("class", "gallerytime");
 
@@ -195,7 +207,7 @@ function VisualzierContstructor() {
 				day = "thu_";
 				break;
 			case 5:
-				day = "fir_";
+				day = "fri_";
 				break;
 			case 6:
 				day = "sat_";
