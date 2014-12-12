@@ -17,8 +17,8 @@ urlpatterns = patterns('',
     url(r'^gallery/(?P<slug>[-_\w]+)/$', 'galleries.views.gallery',name="gallery-detail"),
 
     url(r'^gswipelist/$','galleries.views.gswipelist',name='gal_list'),
-    url(r'^galjsonsimp','galleries.views.galJsonSimple',name="gal_json"),
-
+    url(r'^galjsonsimp','galleries.views.galJsonSimple',name="gal_json"),\
+    url(r'^galinlineview/(?P<slug>[-_\w]+)/$', 'galleries.views.galinlineview',name="gal-inline"),
 
     url(r'^admin/', include(admin.site.urls)),
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

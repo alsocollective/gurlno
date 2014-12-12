@@ -8,18 +8,23 @@
 	<h2>map</h2>
 </div>
 <div id="gallerycontainer">
-	<div id="gallerynav">
-		<div id="galleryhamberger">
-		</div><ul>
-			<li><a href="#alpha">Alpha</a></li><li>
-			<a href="#open">Open</a></li><li>
-			<a href="#recep">Recep.</a></li><li>
-			<a href="#prox">Prox.</a></li>			
-		</ul>
-	</div>
-<div id="gallerylist">
+	<div id="list">
+		<div id="gallerynav">
+			<div id="galleryhamberger">
+			</div><ul>
+				<li><a href="#alpha">Alpha</a></li><li>
+				<a href="#open">Open</a></li><li>
+				<a href="#recep">Recep.</a></li><li>
+				<a href="#prox">Prox.</a></li>			
+			</ul>
+		</div>
+		<div id="gallerylist">
 
-</div>
+		</div>
+	</div>
+	<div id="galleryinline">
+
+	</div>
 </div>
 
 
@@ -27,6 +32,7 @@
 
 {% block other %}
 <script src="{% static "js/lib/d3.3.4.13.js" %}" charset="utf-8"></script>
+<script src="{% static "js/lib/jquery-1.11.0.min.js" %}" charset="utf-8"></script>
 
 <script type="text/javascript" src="{% static "js/pages/galswipe.js" %}"></script>
 <script type="text/javascript">

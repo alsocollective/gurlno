@@ -2,7 +2,9 @@ function VisualzierContstructor() {
 	out = {
 		"settings": {
 			"maxDay": 20, //24,
-			"minDay": 8 //0
+			"minDay": 8, //0
+			"offsetoftime": 0,
+			"timeOffSetEnable": true
 		},
 		"data": null
 	};
@@ -15,6 +17,7 @@ function VisualzierContstructor() {
 			// this.eachGallery();
 			console.log(json)
 			that.d3TimeGraph();
+			that.d3Options();
 		});
 	};
 
@@ -23,7 +26,15 @@ function VisualzierContstructor() {
 		splited = (parseInt(splited[0]) + (parseInt(splited[1]) / 60))
 		return splited
 	};
+	out.removed3TimeGraph = function() {
+		var parent = d3.select(".gallerygraph");
+		if (!parent[0][0]) {
+			return null;
+		} else {
+			parent.html("");
+		}
 
+	}
 	out.d3TimeGraph = function() {
 		var that = this;
 		this.updateCurTime();
@@ -41,20 +52,44 @@ function VisualzierContstructor() {
 		this.settings.maxDay = max;
 		this.settings.minDay = min;
 
-		var parent = d3.select("#gallerylist").append("ul")
+		// REMOVE THIS !@#$	@NASKGN AWIONT Q	@#NT ONzxcgvb
+		// REMOVE THIS !@#$	@NASKGN AWIONT Q	@#NT ONzxcgvb
+		out.settings.curTime = out.settings.curTime - 5
+		// REMOVE THIS !@#$	@NASKGN AWIONT Q	@#NT ONzxcgvb
+		// REMOVE THIS !@#$	@NASKGN AWIONT Q	@#NT ONzxcgvb
+		var offSetOfTime = 0;
+		if (out.settings.timeOffSetEnable && out.settings.curTime < min && out.settings.curTime > max) {
+			offSetOfTime = out.settings.curTime - max;
+		}
+
+		var parent = d3.select(".gallerygraph");
+		if (!parent[0][0]) {
+			parent = d3.select("#gallerylist").append("ul")
+				.attr("class", "gallerygraph")
+		}
 		var listItems = parent.selectAll("li")
 			.data(this.data)
 			.enter()
-			.append("li");
+			.append("li")
+			.append("a");
 
-		listItems.append("div")
+		listItems
+			.attr("href", function(d) {
+				return "/galinlineview/" + d.slug
+			})
+			.on("click", function() {
+				d3.event.preventDefault();
+				out.loadGallery(this.href);
+				return false;
+			})
+			.append("div")
 			.attr("class", "goodTimes")
 			.style("left", function(d) {
 				if (d["time"][day + "start"] == "None") {
 					return 0;
 				}
 				var time = timeCovert(d["time"][day + "start"])
-				return ((time - max) / min * 100) + "%";
+				return ((time - max - offSetOfTime) / (min - max) * 100) + "%";
 			})
 			.style("width", function(d) {
 				if (d["time"][day + "start"] == "None") {
@@ -80,6 +115,35 @@ function VisualzierContstructor() {
 			.attr("class", "curTime")
 			.style("left", (out.settings.curTime / 24 * 100) + "%")
 
+	}
+	out.d3Options = function() {
+		var parent = d3.select("#gallerylist").append("ul")
+		parent.attr("class", "graphoptions")
+
+		parent.append("li").append("a")
+			.text("refresh")
+			.attr("href", "#")
+			.on("click", function(event) {
+				out.removed3TimeGraph()
+				out.d3TimeGraph();
+			});
+		parent.append("li").append("a")
+			.text("time translate")
+			.attr("href", "#")
+			.on("click", function(event) {
+				out.settings.timeOffSetEnable = !out.settings.timeOffSetEnable;
+				out.removed3TimeGraph();
+				out.d3TimeGraph();
+			})
+
+	}
+
+	out.loadGallery = function(gallery) {
+
+		$("#galleryinline").load(gallery, function(response, status, xhr) {
+			$("#gallerycontainer").addClass("singlegalactive");
+			$(".topblackbar").height($("#gallerynav").height());
+		});
 	}
 
 	out.generateCurrentTimeBar = function() {

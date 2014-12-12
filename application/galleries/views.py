@@ -4,8 +4,8 @@ from django.contrib.auth import authenticate
 from galleries.models import *
 from django.core import serializers
 from django.forms.models import model_to_dict
-
-import json
+from application.settings import MEDIA_URL
+import json, datetime
 
 def home(request):
 	if request.user.is_authenticated():
@@ -74,6 +74,7 @@ def galJsonSimple(request):
 	for gal in galleries:
 		out.append({ 
 			'gal': gal.title,
+			'slug':gal.slug,
 			'time': getTime(gal),
 			'show' : getShow(gal)
 			})
@@ -83,7 +84,22 @@ def galJsonSimple(request):
 
 
 
+def galinlineview(request,slug):
+	if not request.user.is_authenticated():
+		return redirect('/login')
+	try:
+		gallery = Gallery.objects.get(slug=slug)
+		time = HoursOfOp.objects.get(parent=gallery)
+		shows = Show.objects.filter(gallery=gallery)
+		now = datetime.datetime.now().date()
+		currentShow = Show.objects.filter(gallery=gallery,date_start__lt=now,date_end__gt=now)
+	except Exception, e:
+		print e
+		return HttpResponse("not much")
+		pass
+	return render(request,'galleryinline.html',{"MEDIA_URL":MEDIA_URL,"gal":gallery,"time":time,"shows":shows,"current_show":currentShow})
 
+		
 
 
 

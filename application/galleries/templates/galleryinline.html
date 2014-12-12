@@ -1,0 +1,45 @@
+{% load thumbnail %}
+<div class="topblackbar">
+
+</div>
+<div class="eventdetails">
+	<h2>{{gal.title}}</h2>
+	<h3>{{current_show.0.title}}</h3>
+
+	<div class="eventdescirption">
+		<p>This day open and close time/if it's opening it's that time...</p>
+		<p>{{current_show.0.date_start}} - {{current_show.0.date_end}}</p>		
+		<img src="{{MEDIA_URL}}{{current_show.0.cover_work}}">
+		<!-- {{ current_show.0.cover_work|thumbnail_url:'avatar' }} -->
+		<p>{{current_show.0.description}}</p>
+		<p>list of artists</p>
+	</div>
+	<hr>
+
+	<div class="description">
+	<p>gallery description</p>
+	{{gal.description}}
+	</div>
+
+
+
+	<div class="time">
+		<span class="date-time {% if not time.mon_start %}notopen{% endif %}">mon - {% if time.mon_start %} {{time.mon_start}} till {{time.mon_end}} {% else %} not Open {% endif %}</span>
+		<span class="date-time {% if not time.tue_start %}notopen{% endif %}">tue - {% if time.tue_start %} {{time.tue_start}} till {{time.tue_end}} {% else %} not Open {% endif %}</span>
+		<span class="date-time {% if not time.wed_start %}notopen{% endif %}">wed - {% if time.wed_start %} {{time.wed_start}} till {{time.wed_end}} {% else %} not Open {% endif %}</span>
+		<span class="date-time {% if not time.thu_start %}notopen{% endif %}">thu - {% if time.thu_start %} {{time.thu_start}} till {{time.thu_end}} {% else %} not Open {% endif %}</span>
+		<span class="date-time {% if not time.fri_start %}notopen{% endif %}">fri - {% if time.fri_start %} {{time.fri_start}} till {{time.fri_end}} {% else %} not Open {% endif %}</span>
+		<span class="date-time {% if not time.sat_start %}notopen{% endif %}">sat - {% if time.sat_start %} {{time.sat_start}} till {{time.sat_end}} {% else %} not Open {% endif %}</span>
+		<span class="date-time {% if not time.sun_start %}notopen{% endif %}">sun - {% if time.sun_start %} {{time.sun_start}} till {{time.sun_end}} {% else %} not Open {% endif %}</span>
+	</div>
+
+	<div class="shows">
+		<h3>future and past shows</h3>
+		{% for show in shows %}
+			<div class="show">
+				<h3>{{show.title}}</h3>
+				{{show.date_start}} - {{show.date_end}}
+			</div>
+		{% endfor %}
+	</div>	
+</div>
