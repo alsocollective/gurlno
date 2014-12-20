@@ -97,6 +97,8 @@ def galJsonSimple(request):
 	for gal in galleries:
 		out.append({ 
 			'gal': gal.title,
+			'lat': gal.lat,
+			'log': gal.log,
 			'slug':gal.slug,
 			'time': getTime(gal),
 			'show' : getShow(gal),

@@ -134,6 +134,14 @@ li{
 				}
 			}
 		}
+		.details{
+			position: absolute;
+			right: 0;
+			bottom: 0;
+			padding: 0.5em;
+			z-index: 99;
+			font-size: 0.8em;
+		}
 	}
 	&.singlegalactive{
 		#galleryinline{

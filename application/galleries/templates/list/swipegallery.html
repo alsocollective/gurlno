@@ -9,8 +9,47 @@
 	<link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.4/mapbox.css' rel='stylesheet' />	
 	<div id='map'></div>
 	<script type="text/javascript">
-		L.mapbox.accessToken = 'pk.eyJ1IjoiYm9oZGFuLWFuZGVyc29uIiwiYSI6Im5VeFYwcVkifQ.9-4ipoJcWi6MuQoItyIWnA';
-		L.mapbox.map('map', 'bohdan-anderson.kg637d48');
+	var Map = {
+			markers : [],
+			init:function(){
+				L.mapbox.accessToken = 'pk.eyJ1IjoiYm9oZGFuLWFuZGVyc29uIiwiYSI6Im5VeFYwcVkifQ.9-4ipoJcWi6MuQoItyIWnA';
+				this.MAP = L.mapbox.map('map', 'bohdan-anderson.kg61nnf1');
+			},
+			move:function(lat,lon){
+				this.MAP.setView([lat,lon], 16)
+			},
+			addMarker:function(lat,lon,title,description){
+				var marker = L.mapbox.featureLayer({
+					// this feature is in the GeoJSON format: see geojson.org
+					// for the full specification
+					type: 'Feature',
+					geometry: {
+						type: 'Point',
+
+						coordinates: [
+						lon,
+						lat 
+						]
+					},
+					properties: {
+						title: title,
+						description: description,
+						// https://www.mapbox.com/guides/an-open-platform/#simplestyle
+						'marker-size': 'large',
+						'marker-color': '#000',
+						'marker-symbol': 'art-gallery'
+					}
+				}).addTo(this.MAP);
+				Map.markers.push(marker)
+			},
+			resetMap:function(){
+				for(var a = 0, max = Map.markers.length; a < max; ++a){
+					Map.markers[a].clearLayers()
+				}
+				Map.markers = [];
+			}
+		}
+	Map.init();
 	</script>
 </div>
 <div id="gallerycontainer">

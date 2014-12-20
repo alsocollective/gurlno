@@ -15,7 +15,6 @@ function VisualzierContstructor() {
 			that.data = json;
 			// this.generateCurrentTimeBar();
 			// this.eachGallery();
-			console.log(json)
 			that.d3TimeGraph();
 			that.d3Options();
 			that.mainNavSetup();
@@ -41,6 +40,7 @@ function VisualzierContstructor() {
 		} else {
 			parent.html("");
 		}
+		Map.resetMap()
 	}
 
 	out.d3TimeGraph = function(data) {
@@ -109,7 +109,6 @@ function VisualzierContstructor() {
 			})
 			.append("div")
 			.attr("class", function(d) {
-				console.log(d)
 				var out = "goodTimes";
 				if (d["opening"]) {
 					out += " opening";
@@ -140,14 +139,21 @@ function VisualzierContstructor() {
 			})
 
 		listItems.append("h3").text(function(d) {
+			var description = d["time"][day + "start"].substring(0, 5) + " until " + d["time"][day + "end"].substring(0, 5)
+			if (d["opening"]) {
+				description = d["opening"]["opening_start_time"].substring(0, 5) + " until " + d["opening"]["opening_end_time"].substring(0, 5)
+			}
+			Map.addMarker(d.lat, d.log, d.gal, description);
 			return d.gal;
 		}).attr("class", "gallerytitle");
+
 		listItems.append('h4').text(function(d) {
 			if (d.show == "noshow") {
 				return "no current show";
 			}
 			return d.show.title;
 		}).attr("class", "showtitle");
+
 		listItems.append("h4").text(function(d) {
 			if (!d["time"][day + "start"]) {
 				return "closed"
@@ -156,11 +162,30 @@ function VisualzierContstructor() {
 				return d["opening"]["opening_start_time"].substring(0, 5) + " until " + d["opening"]["opening_end_time"].substring(0, 5)
 			}
 			return d["time"][day + "start"].substring(0, 5) + " until " + d["time"][day + "end"].substring(0, 5)
-		}).attr("class", "gallerytime");
+		}).classed({
+			"gallerytime": true
+		});
+
+		var detailPanel = listItems.append("div").classed({
+			"details": true
+		})
+		detailPanel.append("div").text("map")
+			.classed({
+				"gotoonmap": true
+			})
+			.on("click", function(d) {
+				console.log(d)
+				Map.move(d.lat, d.log);
+				d3.event.stopPropagation();
+				d3.event.preventDefault();
+			});
+
 
 		d3.select(".curtime .time-bar")
 			.append("div")
-			.attr("class", "curTime")
+			.classed({
+				"curTime": true
+			})
 			.style("left", (out.settings.curTime / 24 * 100) + "%")
 	}
 
