@@ -18,14 +18,22 @@ function VisualzierContstructor() {
 			console.log(json)
 			that.d3TimeGraph();
 			that.d3Options();
+			that.mainNavSetup();
 		});
 	};
+
+	out.mainNavSetup = function() {
+		//TODO
+		// SET UP the top nav HERE!
+
+	}
 
 	out.hoursAndMinToFloat = function(time) {
 		var splited = time.split(":");
 		splited = (parseInt(splited[0]) + (parseInt(splited[1]) / 60))
 		return splited
 	};
+
 	out.removed3TimeGraph = function() {
 		var parent = d3.select(".gallerygraph");
 		if (!parent[0][0]) {
@@ -33,26 +41,37 @@ function VisualzierContstructor() {
 		} else {
 			parent.html("");
 		}
-
 	}
-	out.d3TimeGraph = function() {
+
+	out.d3TimeGraph = function(data) {
 		var that = this;
+		var locData = that.data;
+		if (data) {
+			locData = data;
+		}
 		this.updateCurTime();
 		var day = this.settings.curDay,
 			start = 24,
 			end = 0,
 			timeCovert = this.hoursAndMinToFloat;
 
-		var max = d3.min(that.data, function(d) {
+		var max = d3.min(locData, function(d) {
 			if (!d["time"][day + "start"]) {
 				return false;
 			}
+			if (d["opening"]) {
+				return timeCovert(d["opening"]["opening_start_time"]);
+			}
 			return timeCovert(d["time"][day + "start"]);
 		});
-		var min = d3.max(that.data, function(d) {
+		var min = d3.max(locData, function(d) {
 			if (!d["time"][day + "end"]) {
 				return false;
 			}
+			if (d["opening"]) {
+				return timeCovert(d["opening"]["opening_end_time"]);
+			}
+
 			return timeCovert(d["time"][day + "end"]);
 		});
 		this.settings.maxDay = max;
@@ -74,7 +93,7 @@ function VisualzierContstructor() {
 				.attr("class", "gallerygraph")
 		}
 		var listItems = parent.selectAll("li")
-			.data(this.data)
+			.data(locData)
 			.enter()
 			.append("li")
 			.append("a");
@@ -89,20 +108,34 @@ function VisualzierContstructor() {
 				return false;
 			})
 			.append("div")
-			.attr("class", "goodTimes")
+			.attr("class", function(d) {
+				console.log(d)
+				var out = "goodTimes";
+				if (d["opening"]) {
+					out += " opening";
+				}
+				return out;
+			})
 			.style("left", function(d) {
 				if (!d["time"][day + "start"]) {
 					return 0;
 				}
-				var time = timeCovert(d["time"][day + "start"])
-				return ((time - max - offSetOfTime) / (min - max) * 100) + "%";
+				var startTime = d["time"][day + "start"]
+				if (d["opening"]) {
+					startTime = d["opening"]["opening_start_time"]
+				}
+				return ((timeCovert(startTime) - max - offSetOfTime) / (min - max) * 100) + "%";
 			})
 			.style("width", function(d) {
 				if (!d["time"][day + "start"]) {
 					return 0;
 				}
-				var startTime = timeCovert(d["time"][day + "start"])
-				var endTime = timeCovert(d["time"][day + "end"])
+				var startTime = timeCovert(d["time"][day + "start"]),
+					endTime = timeCovert(d["time"][day + "end"]);
+				if (d["opening"]) {
+					startTime = timeCovert(d["opening"]["opening_start_time"]);
+					endTime = timeCovert(d["opening"]["opening_end_time"]);
+				}
 				return ((endTime - startTime) / (min - max) * 100) + "%";
 			})
 
@@ -119,6 +152,9 @@ function VisualzierContstructor() {
 			if (!d["time"][day + "start"]) {
 				return "closed"
 			}
+			if (d["opening"]) {
+				return d["opening"]["opening_start_time"].substring(0, 5) + " until " + d["opening"]["opening_end_time"].substring(0, 5)
+			}
 			return d["time"][day + "start"].substring(0, 5) + " until " + d["time"][day + "end"].substring(0, 5)
 		}).attr("class", "gallerytime");
 
@@ -126,8 +162,8 @@ function VisualzierContstructor() {
 			.append("div")
 			.attr("class", "curTime")
 			.style("left", (out.settings.curTime / 24 * 100) + "%")
-
 	}
+
 	out.d3Options = function() {
 		var parent = d3.select("#gallerylist").append("ul")
 		parent.attr("class", "graphoptions")
@@ -147,14 +183,19 @@ function VisualzierContstructor() {
 				out.removed3TimeGraph();
 				out.d3TimeGraph();
 			})
-
 	}
 
 	out.loadGallery = function(gallery) {
-
 		$("#galleryinline").load(gallery, function(response, status, xhr) {
 			$("#gallerycontainer").addClass("singlegalactive");
 			$(".topblackbar").height($("#gallerynav").height());
+
+			$(".closeinlinegal").click(function(event) {
+				event.preventDefault();
+				$("#gallerycontainer").removeClass("singlegalactive");
+				$("#galleryinline").html("");
+				return false;
+			})
 		});
 	}
 

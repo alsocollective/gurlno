@@ -7,6 +7,9 @@ from django.forms.models import model_to_dict
 from application.settings import MEDIA_URL
 import json, datetime
 
+def offSetTimeBy(diff):
+	return datetime.timedelta(hours=diff) + datetime.datetime.now()
+
 def home(request):
 	if request.user.is_authenticated():
 		galleries = Gallery.objects.all()
@@ -56,16 +59,29 @@ def gswipelist(request):
 
 def getShow(gallery):
 	try:
-		now = datetime.datetime.now().date()
-		show = Show.objects.filter(gallery=gallery,date_start__lt=now,date_end__gt=now)		
+		now = offSetTimeBy(-5).date()
+		show = Show.objects.filter(gallery=gallery,date_start__lte=now,date_end__gt=now)		
 		if(len(show) == 0):
 			show = "noshow"
 		else:
 			show = json.loads(serializers.serialize("json",show))[0]["fields"]
 		return show
 		# return Show.objects.filter(gallery=gallery)[0].title
-	except Exception:
+	except Exception,e:
+		print e
 		return None
+
+def getIfOpening(gallery):
+	try:
+		now = offSetTimeBy(-5).date()
+		show = Show.objects.filter(gallery=gallery,opening_start=now)
+		if(len(show)>0):
+			return json.loads(serializers.serialize("json",show))[0]["fields"]
+		return ""
+	except Exception,e:
+		print e
+		return None	
+
 def getTime(gallery):
 	try:
 		return json.loads(serializers.serialize("json",HoursOfOp.objects.filter(parent = gallery)))[0]["fields"]
@@ -83,7 +99,8 @@ def galJsonSimple(request):
 			'gal': gal.title,
 			'slug':gal.slug,
 			'time': getTime(gal),
-			'show' : getShow(gal)
+			'show' : getShow(gal),
+			'opening': getIfOpening(gal)
 			})
 
 	return HttpResponse(json.dumps(out), content_type="application/json")
@@ -99,12 +116,12 @@ def galinlineview(request,slug):
 		time = HoursOfOp.objects.get(parent=gallery)
 		shows = Show.objects.filter(gallery=gallery)
 		now = datetime.datetime.now().date()
-		currentShow = Show.objects.filter(gallery=gallery,date_start__lt=now,date_end__gt=now)
+		currentShow = Show.objects.filter(gallery=gallery,date_start__lte=now,date_end__gt=now)
 	except Exception, e:
 		print e
 		return HttpResponse("not much")
 		pass
-	return render(request,'galleryinline.html',{"MEDIA_URL":MEDIA_URL,"gal":gallery,"time":time,"shows":shows,"current_show":currentShow})
+	return render(request,'galleryinline.html',{"MEDIA_URL":MEDIA_URL,"gal":gallery,"time":time,"shows":shows,"current_show":currentShow,'opening': getIfOpening(gallery)})
 
 		
 
