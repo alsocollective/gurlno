@@ -1,6 +1,7 @@
 from django import template
 import json
 from django.utils.safestring import mark_safe
+import datetime
 
 register = template.Library()
 
@@ -36,3 +37,34 @@ def timeAsJsonObject(timeObject):
 		["%s"%timeObject.sat_start,"%s"%timeObject.sat_end],
 	]
 	return mark_safe(json.dumps(out))
+
+def offSetTimeBy(diff):
+	return datetime.timedelta(hours=diff) + datetime.datetime.now()
+
+
+@register.filter(name="todayTimes")
+def todayTimes(timeObject):
+	day = offSetTimeBy(-5).weekday()
+	short = "mon"
+	if(day == 1):
+		short = "tue"
+	elif(day == 2):
+		short = "wed"
+	elif(day == 3):
+		short = "thu"
+	elif(day == 4):
+		short = "fri"
+	elif(day == 5):
+		short = "sat"
+	elif(day == 6):
+		short = "sun"
+		print "%s_start"%short
+
+	return "%s till %s" %(timeObject.__getattribute__("%s_start"%short),timeObject.__getattribute__("%s_end"%short))
+	return dir(timeObject)
+
+@register.filter(name="dirIt")
+def dirIt(obj):
+	return dir(obj)
+
+

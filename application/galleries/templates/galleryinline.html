@@ -1,23 +1,54 @@
 {% load thumbnail %}
+{% load bohdanfilter %}
 <div class="topblackbar">
-
+	<a href="/admin/galleries/gallery/{{gal.pk}}" target="_blank">edit gal</a>
+	<a href="/admin/galleries/show/add" target="_blank"> add show</a>
+	{% if current_show.0 %}<a href="/admin/galleries/show/{{current_show.0.pk}}" target="_blank"> edit show</a>{%endif%}
+	<a href="#close" class="closeinlinegal">close</a>
 </div>
 <div class="eventdetails">
 	<h2>{{gal.title}}</h2>
-	<h3>{{current_show.0.title}}</h3>
+	{% if current_show.0 %}
+		<!-- IF show is available -->
 
-	<div class="eventdescirption">
-		<p>This day open and close time/if it's opening it's that time...</p>
-		<p>{{current_show.0.date_start}} - {{current_show.0.date_end}}</p>		
-		<img src="{{MEDIA_URL}}{{current_show.0.cover_work}}">
-		<!-- {{ current_show.0.cover_work|thumbnail_url:'avatar' }} -->
-		<p>{{current_show.0.description}}</p>
-		<p>list of artists</p>
-	</div>
-	<hr>
+		<h3>{{current_show.0.title}}</h3>
+		<p class="eventtime">
+			{% if opening and current_show.0%}
+			opening today - {{opening.opening_start_time}} til {{opening.opening_end_time}}<br>
+			{% endif %}
+			normal times - {{time|todayTimes}}
+		</p>
+		<p class="eventdate">
+			showing from - {{current_show.0.date_start}} - {{current_show.0.date_end}}
+		</p>
+
+		<div class="eventdescirption">
+			<img src="{{current_show.0.cover_work.Image|thumbnail_url:'normal'}}">
+			<!-- {{MEDIA_URL}}/current_show.0.cover_work.Image -->
+
+			<p>{{current_show.0.description}}</p>
+
+			<!-- {{ current_show.0.cover_work|thumbnail_url:'avatar' }} -->
+			<ul class="artistlist">
+			{% for artist in current_show.0.includes_artists.all%}
+				<li>
+					{{artist.first_name}} {{artist.last_name}} {% if artist.website %}
+						- <a href="{{artist.website}}" target="_blank">website</a>	
+					{% endif %}
+				</li>
+			{%endfor%}
+			</ul>
+			
+		</div>
+		<hr>
+	{% else %}
+		<!-- NO SHOW data -->
+		<p class="eventtime">
+			{{time|todayTimes}}
+		</p>
+	{%endif%}
 
 	<div class="description">
-	<p>gallery description</p>
 	{{gal.description}}
 	</div>
 
@@ -41,5 +72,5 @@
 				{{show.date_start}} - {{show.date_end}}
 			</div>
 		{% endfor %}
-	</div>	
+	</div>
 </div>
