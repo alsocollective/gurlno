@@ -139,9 +139,17 @@ function VisualzierContstructor() {
 			})
 
 		listItems.append("h3").text(function(d) {
-			var description = d["time"][day + "start"].substring(0, 5) + " until " + d["time"][day + "end"].substring(0, 5)
+			console.log(day + "start");
+			console.log(d["time"]);
+			var description = d["time"][day + "start"]
+			if (description) {
+				description = description.substring(0, 5) + " until " + d["time"][day + "end"].substring(0, 5);
+			}
 			if (d["opening"]) {
 				description = d["opening"]["opening_start_time"].substring(0, 5) + " until " + d["opening"]["opening_end_time"].substring(0, 5)
+			}
+			if (description = null) {
+				return d.gal;
 			}
 			Map.addMarker(d.lat, d.log, d.gal, description);
 			return d.gal;
