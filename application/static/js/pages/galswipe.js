@@ -104,7 +104,7 @@ function VisualzierContstructor() {
 			})
 			.on("click", function() {
 				d3.event.preventDefault();
-				out.loadGallery(this.href);
+				// out.loadGallery(this.href);
 				return false;
 			})
 			.append("div")
@@ -138,9 +138,18 @@ function VisualzierContstructor() {
 				return ((endTime - startTime) / (min - max) * 100) + "%";
 			})
 
+		$(".gallerygraph a").hammer().bind("panleft panright", function(ev) {
+			if (ev.type == "panright") {
+				console.log(this.href)
+				out.loadGallery(this.href);
+			} else {
+				$("#gallerycontainer").removeClass("singlegalactive");
+				$("#galleryinline").html("");
+			}
+		});
+
 		listItems.append("h3").text(function(d) {
-			console.log(day + "start");
-			console.log(d["time"]);
+
 			var description = d["time"][day + "start"]
 			if (description) {
 				description = description.substring(0, 5) + " until " + d["time"][day + "end"].substring(0, 5);
@@ -182,7 +191,6 @@ function VisualzierContstructor() {
 				"gotoonmap": true
 			})
 			.on("click", function(d) {
-				console.log(d)
 				Map.move(d.lat, d.log);
 				d3.event.stopPropagation();
 				d3.event.preventDefault();
