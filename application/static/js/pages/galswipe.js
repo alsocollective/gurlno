@@ -138,11 +138,14 @@ function VisualzierContstructor() {
 				return ((endTime - startTime) / (min - max) * 100) + "%";
 			})
 
-		$(".gallerygraph a").hammer().bind("panleft panright", function(ev) {
-			if (ev.type == "panright") {
-				console.log(this.href)
+		$(".gallerygraph a").hammer().bind("panleft panright panstart panend", function(ev) {
+			if (ev.type == "panstart") {
+				$(this.parentNode).addClass("panning")
+			} else if (ev.type == "panend") {
+				$(this.parentNode).removeClass("panning")
+			} else if (ev.type == "panright") {
 				out.loadGallery(this.href);
-			} else {
+			} else if (ev.type == "panleft") {
 				$("#gallerycontainer").removeClass("singlegalactive");
 				$("#galleryinline").html("");
 			}
