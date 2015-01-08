@@ -21,7 +21,14 @@ class gal_admin(admin.ModelAdmin):
 				("description","gallorist","gallery_tyle"),
 				("url","facebook","instagram","twitter",),
 				("address","log","lat","neighbourhood","google_place_key"),
-				("phone","email",)
+				("phone","email",),
+				("mon_start","mon_end"),
+				("tue_start","tue_end"),
+				("wed_start","wed_end"),
+				("thu_start","thu_end"),
+				("fri_start","fri_end"),
+				("sat_start","sat_end"),
+				("sun_start","sun_end"),
 			]}
 		),]	
 	inlines = [gal_inline_date,]

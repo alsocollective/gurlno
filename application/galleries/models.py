@@ -119,6 +119,21 @@ class Gallery(models.Model):
 
 	slug = models.SlugField(blank=True)
 
+	mon_start = models.TimeField(blank=True,null=True)
+	mon_end = models.TimeField(blank=True,null=True)
+	tue_start = models.TimeField(blank=True,null=True)
+	tue_end = models.TimeField(blank=True,null=True)
+	wed_start = models.TimeField(blank=True,null=True)
+	wed_end = models.TimeField(blank=True,null=True)
+	thu_start = models.TimeField(blank=True,null=True)
+	thu_end = models.TimeField(blank=True,null=True)
+	fri_start = models.TimeField(blank=True,null=True)
+	fri_end = models.TimeField(blank=True,null=True)
+	sat_start = models.TimeField(blank=True,null=True)
+	sat_end = models.TimeField(blank=True,null=True)
+	sun_start = models.TimeField(blank=True,null=True)
+	sun_end = models.TimeField(blank=True,null=True)
+
 	def save(self,*args, **kwargs):
 		self.slug = slugify(self.title)
 		super(Gallery, self).save(*args, **kwargs)
@@ -202,7 +217,7 @@ class Show(models.Model):
 	days_showing = models.ManyToManyField(Day,blank=True,null=True)
 	currator = models.ManyToManyField(Gallorist,blank=True,null=True)
 	tags = models.ManyToManyField(Tag,blank=True,null=True)
-
+	published = models.BooleanField(default=True)
 	slug = models.SlugField(blank=True)
 	def __unicode__(self):
 		return self.title	

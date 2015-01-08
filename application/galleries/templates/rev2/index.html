@@ -1,0 +1,49 @@
+{% extends "rev2/base.html" %}
+{% load thumbnail %}
+{% load static %}
+{% load bohdanfilter %}
+
+
+{% block header %}
+<script type="text/javascript" src="{% static "js/lib/modernizr.js" %}"></script>
+
+{% endblock %}
+
+{% block content %}
+
+<ul>
+{% for show in data.shows %}
+	<li class="gallery">
+		<div class="time"></div>
+		<div>
+			<div class="upperdetails">
+				{{show|todayTimes|safe}}
+				<h4 class="showlength">{{show.date_start|date:"b d"}} &#8212; {{show.date_end|date:"b d"}}</h4>
+				<h4 class="distance" data-lat="{{show.gallery.lat}}" data-log="{{show.gallery.log}}"></h4>
+			</div>
+			<div class="maindetails">
+				<h2 class="gallerytitle">{{show.gallery}}</h2>
+				<h3 class="showtitle">{{show}}</h2>
+			</div>
+			{% if user.username == "admin" %}
+				<div class="admin">
+					<h4><a href="/admin/galleries/gallery/{{show.gallery.pk}}/" target="_blank">gal</a></h4>
+					<h4><a href="/admin/galleries/show/{{show.pk}}/" target="_blank">sho</a></h4>
+				</div>
+			{% endif %}
+		</div>
+		
+	</li>
+{% endfor %}
+</ul>
+
+{% endblock %}
+
+{% block footer %}
+
+<script src="{% static "js/lib/jquery-1.11.0.min.js" %}" charset="utf-8"></script>
+<script src="{% static "js/lib/hammer.min.js" %}" charset="utf-8"></script>
+<script src="{% static "js/lib/jquery.hammer.js" %}" charset="utf-8"></script>
+
+
+{% endblock%}

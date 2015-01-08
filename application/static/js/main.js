@@ -3,7 +3,6 @@ var app = {
 
 	},
 	init: function() {
-
 		console.log("loaded app");
 	},
 	loadMap: function() {

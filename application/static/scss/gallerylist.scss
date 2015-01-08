@@ -1,0 +1,19 @@
+a{
+	color:inherit;
+	text-decoration:none;
+}
+
+.gallery{
+	h2,h3,h4{
+		display: inline;
+	}
+}
+
+.upperdetails{
+	.showlength{
+		text-transform: capitalize;
+	}
+	.hours{
+		text-transform: lowercase
+	}
+}
