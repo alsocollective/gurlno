@@ -7,11 +7,11 @@
 {% block header %}
 <script type="text/javascript" src="{% static "js/lib/modernizr.js" %}"></script>
 
-{% endblock %}
+{% endblock %} 
 
 {% block content %}
 
-<ul>
+<ul id="gallerylist">
 {% for show in data.shows %}
 	<li class="gallery">
 		<div class="time"></div>
@@ -44,6 +44,7 @@
 <script src="{% static "js/lib/jquery-1.11.0.min.js" %}" charset="utf-8"></script>
 <script src="{% static "js/lib/hammer.min.js" %}" charset="utf-8"></script>
 <script src="{% static "js/lib/jquery.hammer.js" %}" charset="utf-8"></script>
-
+<script src="{% static "js/main.js" %}" charset="utf-8"></script>
+<script type="text/javascript">app.init();</script>
 
 {% endblock%}
