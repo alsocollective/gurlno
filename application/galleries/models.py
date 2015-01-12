@@ -1,6 +1,7 @@
 from django.db import models
 from django.template.defaultfilters import slugify
 from easy_thumbnails.fields import ThumbnailerImageField
+import datetime
 
 class WorkMedium(models.Model):
 	medium = models.CharField(max_length=500)
@@ -219,6 +220,75 @@ class Show(models.Model):
 	tags = models.ManyToManyField(Tag,blank=True,null=True)
 	published = models.BooleanField(default=True)
 	slug = models.SlugField(blank=True)
+
+	# finds if the gallery is open, open that day, reception if day
+	# => string
+	def checkIfOpen(self):
+		#TODO set back time -10 to -5
+		time = datetime.timedelta(hours=-5) + datetime.datetime.now()
+		reception = ""
+		opened = ""
+
+		if(self.opening_start and self.opening_start == time.date()):
+			reception = "reception"
+			if self.opening_end_time:
+				if(self.opening_start_time < time.time() < self.opening_end_time):
+					opened = "doorsopen"
+			elif(self.opening_start_time < time.time()):
+				opened = "doorsopen"
+
+		else:
+			day = time.strftime("%a").lower()
+			#TODO remove the set day to friday...
+			day = "fri"
+ 			starttime = self.gallery.__getattribute__("%s_start"%day)
+			endtime = self.gallery.__getattribute__("%s_end"%day)
+			if starttime:
+				if endtime:
+					if starttime < time.time() < endtime:
+						opened = "doorsopen"
+				elif starttime < time.time():
+					opened = "doorsopen"
+		return "%s %s" %(reception, opened)
+
+	# returns the eles as a html h4 element
+	# => <h4 data-open="18" data-close="20.5"> 6:00pm - 8:30pm </h4>
+	# => <h4> closed </h4>
+	def getHoursOpen(self):
+		out = "<h4> CLOSED </h4>"
+		#TODO set back time -10 to -5
+		time = datetime.timedelta(hours=-5) + datetime.datetime.now()
+		if(self.opening_start and self.opening_start == time.date()):
+			start = self.TimeToString(self.opening_start_time)
+			if self.opening_end_time:
+				end = self.TimeToString(self.opening_end_time)
+			else:
+				end = [24,"unknown"]
+			out = "<h4 class='hours' data-start='%s' data-end='%s' >%s &#8212; %s</h4>" %(start[0],end[0],start[1],end[1])
+		else:
+			day = time.strftime("%a").lower()
+			#TODO remove the set day to friday...
+			day = "fri"
+ 			starttime = self.gallery.__getattribute__("%s_start"%day)
+			endtime = self.gallery.__getattribute__("%s_end"%day)
+			if starttime:
+				if endtime:
+					start = self.TimeToString(starttime) 
+					end = self.TimeToString(endtime)					
+					out = "<h4 class='hours' data-start='%s' data-end='%s' >%s &#8212; %s</h4>" %(start[0],end[0],start[1],end[1])
+				else:
+					start = self.TimeToString(starttime) 
+					out = [24,"unknown"]
+					out = "<h4 class='hours' data-start='%s' data-end='%s' >%s &#8212; %s</h4>" %(start[0],end[0],start[1],end[1])
+		return out
+
+	def TimeToString(self,time):
+		timeformat = "%I:%M%p"
+		timeDec = time.strftime("%H.")
+		timeDec += str(int(time.strftime("%M"))/60)
+		time = time.strftime(timeformat)
+		return (timeDec,time)
+
 	def __unicode__(self):
 		return self.title	
 

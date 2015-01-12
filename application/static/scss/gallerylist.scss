@@ -1,3 +1,5 @@
+@import "variables";
+
 a{
 	color:inherit;
 	text-decoration:none;
@@ -5,6 +7,18 @@ a{
 
 .gallery{
 	position: relative;
+	padding: 0.5em 0;
+	color: #000;
+	background: $lightGrey;
+	&.doorsopen{
+		color: #fff;
+	}
+	&.reception{
+		background: $lightBlue;
+		.time{
+			background: $darkBlue;
+		}
+	}
 	h2,h3,h4{
 		display: inline;
 	}
@@ -16,15 +30,37 @@ a{
 		left: 0;
 		top: 0;
 		height: 100%;
-		background: #f0c;
+		background: $darkGrey;
 	}
 }
 
 .upperdetails{
 	.showlength{
 		text-transform: capitalize;
+		width: 20%;
 	}
 	.hours{
 		text-transform: lowercase
+	}
+	.distance{
+		width: 35%;
+		text-align: right;
+	}
+	h4{
+		display: inline-block;
+		width: 35%;
+		vertical-align: top;
+	}
+}
+
+.maindetails{
+	.gallerytitle{
+		display: inline-block;
+		width: 35%;
+	}
+	.showtitle{
+		vertical-align: bottom;
+		display: inline-block;
+		width: 60%;
 	}
 }

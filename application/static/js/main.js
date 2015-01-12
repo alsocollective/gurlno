@@ -10,6 +10,7 @@ var app = {
 	}
 }
 
+
 app.galleryList = {
 	SETTINGS: {
 		galleryOpen: 24,
@@ -44,6 +45,7 @@ app.galleryList = {
 		init: function(count, element) {
 			console.log(element);
 			app.galleryList.galleryListItem.setTimeScaleOffSet(element);
+			app.galleryList.galleryListItem.setDistance(element);
 		},
 		setTimeScaleOffSet: function(element) {
 			var currentData = $($(element).find(".hours")[0]).data();
@@ -51,11 +53,14 @@ app.galleryList = {
 			currentData.end = parseFloat(currentData.end);
 			var movingElement = $($(element).find(".time")[0]);
 			var width = (currentData.end - currentData.start) / app.galleryList.SETTINGS.galleryTotalOpenTime * 100;
-			//TODO off set left!!!
+			var left = (currentData.start - app.galleryList.SETTINGS.galleryOpen) / app.galleryList.SETTINGS.galleryTotalOpenTime * 100; //(currentData.start - app.galleryList.SETTINGS.galleryTotalOpenTime) / app.galleryList.SETTINGS.galleryTotalOpenTime * 100;
 			movingElement.width(width + "%");
+			movingElement[0].style.left = left + "%";
 
 		},
 		setDistance: function(element) {
+			var distance = $(element).find(".distance")[0];
+			distance.innerHTML = $(distance).data();
 			//TODO get the user lat lon and do math to find difference.
 		}
 	}

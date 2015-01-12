@@ -28,6 +28,9 @@ def offSetTimeBy(diff):
 
 @register.filter(name="todayTimes")
 def todayTimes(timeObject):
+
+	print timeObject.checkIfOpen()
+
 	# return '{{show.gallery.wed_start|date:"fA"}} &#8212; {{show.gallery.wed_end|date:"fA"}}'
 	timeObject = timeObject.gallery
 	currenttime = offSetTimeBy(-5)
@@ -45,29 +48,38 @@ def todayTimes(timeObject):
 		short = "sat"
 	elif(day == 6):
 		short = "sun"
-		print "%s_start"%short
 	timeformat = "%I:%M%p"
 
+	short = "fri"
+
+
+	staticString = """
+	<li class="gallery %s">
+		<div class="time"></div>
+		<div>
+			<div class="upperdetails">
+	"""
 
  	starttime = timeObject.__getattribute__("%s_start"%short)
- 	if not starttime:
- 		return "<h4 class='hours' data-open='false'> CLOSED </h4>"
-	startten = starttime.strftime("%H.")
-	startten += str(int(starttime.strftime("%M"))/60)
-	start = starttime.strftime(timeformat)
+ 	if starttime:
+		startten = starttime.strftime("%H.")
+		startten += str(int(starttime.strftime("%M"))/60)
+		start = starttime.strftime(timeformat)
 
-	endtime = timeObject.__getattribute__("%s_end"%short)
-	endten = endtime.strftime("%H.")
-	endten += str(int(endtime.strftime("%M"))/60)
-	end = endtime.strftime(timeformat)
+		endtime = timeObject.__getattribute__("%s_end"%short)
+		endten = endtime.strftime("%H.")
+		endten += str(int(endtime.strftime("%M"))/60)
+		end = endtime.strftime(timeformat)
 
-	isOpen = "false"
-	currenttime = currenttime.time()
+		isOpen = "false"
+		currenttime = currenttime.time()
 
-	if currenttime < starttime and currenttime > endtime:
-		isOpen = "true"
+		if currenttime < starttime and currenttime > endtime:
+			isOpen = "true"
+		return "<h4 class='hours' data-start='%s' data-end='%s'  data-open='%s'>%s &#8212; %s</h4>" %(startten,endten,isOpen,start,end)
 
-	return "<h4 class='hours' data-start='%s' data-end='%s'  data-open='%s'>%s &#8212; %s</h4>" %(startten,endten,isOpen,start,end)
+
+	return "<h4 class='hours' data-open='false'> CLOSED </h4>"
 
 
 
