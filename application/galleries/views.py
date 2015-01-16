@@ -11,9 +11,7 @@ def offSetTimeBy(diff):
 
 def loadMainGalleryList(request):
 	now = offSetTimeBy(-5).date()
-
 	shows = Show.objects.all().filter(date_end__gte=now)
-
 	return render(request,'rev2/index.html',{"data":{"shows":shows}})
 
 

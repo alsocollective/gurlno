@@ -135,9 +135,50 @@ class Gallery(models.Model):
 	sun_start = models.TimeField(blank=True,null=True)
 	sun_end = models.TimeField(blank=True,null=True)
 
+	timeDateAsString = models.TextField(max_length=1000,blank=True,null=True)
+
 	def save(self,*args, **kwargs):
 		self.slug = slugify(self.title)
+		self.generateTimeDate();
 		super(Gallery, self).save(*args, **kwargs)
+
+	def generateTimeDate(self):
+		myString = """
+		<h4 class="hours"
+			data-mons="%s" data-mone="%s" data-monstring="%s"
+			data-tues="%s" data-tuee="%s" data-tuestring="%s"
+			data-weds="%s" data-wede="%s" data-wedstring="%s"
+			data-thus="%s" data-thue="%s" data-thustring="%s"
+			data-fris="%s" data-frie="%s" data-fristring="%s"
+			data-sats="%s" data-sate="%s" data-satstring="%s"
+			data-suns="%s" data-sune="%s" data-sunstring="%s"
+		>getting time</h4>""" %(
+			self.TimeToString(self.mon_start),self.TimeToString(self.mon_end),self.TimeToSoftString(self.mon_start,self.mon_end),
+			self.TimeToString(self.tue_start),self.TimeToString(self.tue_end),self.TimeToSoftString(self.tue_start,self.tue_end),
+			self.TimeToString(self.wed_start),self.TimeToString(self.wed_end),self.TimeToSoftString(self.wed_start,self.wed_end),
+			self.TimeToString(self.thu_start),self.TimeToString(self.thu_end),self.TimeToSoftString(self.thu_start,self.thu_end),
+			self.TimeToString(self.fri_start),self.TimeToString(self.fri_end),self.TimeToSoftString(self.fri_start,self.fri_end),
+			self.TimeToString(self.sat_start),self.TimeToString(self.sat_end),self.TimeToSoftString(self.sat_start,self.sat_end),
+			self.TimeToString(self.sun_start),self.TimeToString(self.sun_end),self.TimeToSoftString(self.sun_start,self.sun_end),
+			)
+		print 
+		self.timeDateAsString = myString
+
+
+	def TimeToString(self,time):
+		if(not time):
+			return "n/a"
+		timeformat = "%I:%M%p"
+		timeDec = time.strftime("%H.")
+		timeDec += str(int(time.strftime("%M"))/60)
+		# time = time.strftime(timeformat)
+		return timeDec#,time
+
+	def TimeToSoftString(self,time1,time2):
+		if(not time1):
+			return "CLOSED"
+		timeformat = "%I:%M%p"
+		return "%s &#8212; %s"%(time1.strftime(timeformat),time2.strftime(timeformat))
 
 	def __unicode__(self):
 		return self.title
@@ -228,10 +269,16 @@ class Show(models.Model):
 		time = datetime.timedelta(hours=-5) + datetime.datetime.now()
 		reception = ""
 		opened = ""
+		starttime = ""
+		endtime = ""
+		softstring = ""
 
 		if(self.opening_start and self.opening_start == time.date()):
 			reception = "reception"
 			if self.opening_end_time:
+				starttime = self.TimeToString(self.opening_start_time)
+				endtime	= self.TimeToString(self.opening_end_time)
+				softstring = self.TimeToSoftString(self.opening_start_time,self.opening_end_time)
 				if(self.opening_start_time < time.time() < self.opening_end_time):
 					opened = "doorsopen"
 			elif(self.opening_start_time < time.time()):
@@ -240,7 +287,7 @@ class Show(models.Model):
 		else:
 			day = time.strftime("%a").lower()
 			#TODO remove the set day to friday...
-			day = "fri"
+			# day = "mon"
  			starttime = self.gallery.__getattribute__("%s_start"%day)
 			endtime = self.gallery.__getattribute__("%s_end"%day)
 			if starttime:
@@ -249,13 +296,24 @@ class Show(models.Model):
 						opened = "doorsopen"
 				elif starttime < time.time():
 					opened = "doorsopen"
-		return "%s %s" %(reception, opened)
+
+		# return "class='gallery'"
+		if(not reception):
+			return "class='gallery %s %s'"%(reception,opened)
+
+		return """
+			class="gallery %s %s" 
+			data-opening="%s" 
+			data-times="%s" 
+			data-timee="%s"
+			data-timestring="%s"
+		""" %(reception,opened,opened,starttime[0],endtime[0],softstring)
 
 	# returns the eles as a html h4 element
 	# => <h4 data-open="18" data-close="20.5"> 6:00pm - 8:30pm </h4>
 	# => <h4> closed </h4>
 	def getHoursOpen(self):
-		out = "<h4> CLOSED </h4>"
+		out = "<h4  class='hours'> CLOSED </h4>"
 		#TODO set back time -10 to -5
 		time = datetime.timedelta(hours=-5) + datetime.datetime.now()
 		if(self.opening_start and self.opening_start == time.date()):
@@ -268,7 +326,7 @@ class Show(models.Model):
 		else:
 			day = time.strftime("%a").lower()
 			#TODO remove the set day to friday...
-			day = "fri"
+			day = "mon"
  			starttime = self.gallery.__getattribute__("%s_start"%day)
 			endtime = self.gallery.__getattribute__("%s_end"%day)
 			if starttime:
@@ -282,12 +340,20 @@ class Show(models.Model):
 					out = "<h4 class='hours' data-start='%s' data-end='%s' >%s &#8212; %s</h4>" %(start[0],end[0],start[1],end[1])
 		return out
 
+
+
 	def TimeToString(self,time):
 		timeformat = "%I:%M%p"
 		timeDec = time.strftime("%H.")
 		timeDec += str(int(time.strftime("%M"))/60)
 		time = time.strftime(timeformat)
 		return (timeDec,time)
+
+	def TimeToSoftString(self,time1,time2):
+		if(not time1):
+			return "CLOSED"
+		timeformat = "%I:%M%p"
+		return "%s &#8212; %s"%(time1.strftime(timeformat),time2.strftime(timeformat))
 
 	def __unicode__(self):
 		return self.title	
