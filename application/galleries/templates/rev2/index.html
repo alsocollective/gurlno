@@ -30,7 +30,7 @@
 
 <ul id="gallerylist">
 {% for show in data.shows %}
-	<li {{ show.checkIfOpen | safe}}>
+	<li {{ show.checkIfOpen | safe}} id="{{show.gallery.slug}}">
 		<div class="time"></div>
 		<div>
 			<div class="upperdetails">
@@ -53,6 +53,10 @@
 	</li>
 {% endfor %}
 </ul>
+<div id="gallerycontainer">
+<div class="gallerywrapper">
+</div>
+</div>
 
 {% endblock %}
 

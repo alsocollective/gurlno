@@ -30,6 +30,7 @@ class gal_admin(admin.ModelAdmin):
 				("sat_start","sat_end"),
 				("sun_start","sun_end"),
 				("timeDateAsString"),
+				("slug"),
 			]}
 		),]	
 	inlines = [gal_inline_date,]

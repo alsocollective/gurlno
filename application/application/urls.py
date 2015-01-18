@@ -12,6 +12,7 @@ urlpatterns = patterns('',
     url(r'^$', 'galleries.views.home', name='home'),
     url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'registration/login.html'}),
     
+    url(r'^currentshow/(?P<slug>[-_\w]+)/$','galleries.views.currentshow',name="currentshow"),
  #    url(r'^expara/$','galleries.views.expara',name='expara'),
  #    url(r'^galleries/$','galleries.views.gallerylist',name='gal_list'),
  #    url(r'^shows/$','galleries.views.showlist',name='show_list'),

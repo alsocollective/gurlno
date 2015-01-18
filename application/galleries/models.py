@@ -161,7 +161,6 @@ class Gallery(models.Model):
 			self.TimeToString(self.sat_start),self.TimeToString(self.sat_end),self.TimeToSoftString(self.sat_start,self.sat_end),
 			self.TimeToString(self.sun_start),self.TimeToString(self.sun_end),self.TimeToSoftString(self.sun_start,self.sun_end),
 			)
-		print 
 		self.timeDateAsString = myString
 
 
@@ -272,9 +271,11 @@ class Show(models.Model):
 		starttime = ""
 		endtime = ""
 		softstring = ""
+		daynumber = 0
 
 		if(self.opening_start and self.opening_start == time.date()):
 			reception = "reception"
+			daynumber = self.opening_start.weekday()
 			if self.opening_end_time:
 				starttime = self.TimeToString(self.opening_start_time)
 				endtime	= self.TimeToString(self.opening_end_time)
@@ -307,7 +308,8 @@ class Show(models.Model):
 			data-times="%s" 
 			data-timee="%s"
 			data-timestring="%s"
-		""" %(reception,opened,opened,starttime[0],endtime[0],softstring)
+			data-dayofweek="%d"
+		""" %(reception,opened,opened,starttime[0],endtime[0],softstring,daynumber)
 
 	# returns the eles as a html h4 element
 	# => <h4 data-open="18" data-close="20.5"> 6:00pm - 8:30pm </h4>
