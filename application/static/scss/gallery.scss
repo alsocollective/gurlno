@@ -1,0 +1,49 @@
+#gallerycontainer{
+	position: absolute;
+	top: 0;
+	left: 100%;
+	height: 100%;
+	height: 100vh;
+	width: 100%;
+	width: 100vw;
+	background: $lightGrey;
+
+	&.nobackground{
+		background: transparent;
+	}
+
+	&.show{
+		left: 0px;
+		-webkit-transition: left 0.25s ease-out;
+		-moz-transition: left 0.25s ease-out;
+		-o-transition: left 0.25s ease-out;
+		transition: left 0.25s ease-out;		
+	}
+
+	.gallerywrapper{
+		background: $lightGrey;
+		width: 100%;
+		height: 100%;
+		position: relative;
+		> div{
+			-webkit-animation: fadein 1s forwards;
+			animation: fadein 1s forwards;	
+		}	
+	}	
+
+	p{
+		margin: 0;
+	}
+}
+
+
+
+@-webkit-keyframes fadein {
+	0%   {opacity: 0;}
+	100% {opacity: 1;}
+}
+
+@keyframes fadein {
+	0%   {opacity: 0;}
+	100% {opacity: 1;}
+}
