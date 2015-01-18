@@ -1,0 +1,10 @@
+{% load thumbnail %}
+
+<div class="gallerywrapper">
+	<div>
+		<h2>{{data.gal}}</h2>
+		<h3>{{data.show}}</h3>
+		<img src="{{current_show.0.cover_work.Image|thumbnail_url:'normal'}}">
+	</div>
+
+</div>
