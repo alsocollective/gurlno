@@ -34,7 +34,7 @@
 		<div class="time"></div>
 		<div>
 			<div class="upperdetails">
-				{{ show.gallery.timeDateAsString | safe}}
+				<h4{{ show.gallery.timeDateAsString | safe}} class="hours"></h4>
 				<h4 class="showlength">{{show.date_start|date:"b d"}} &#8212; {{show.date_end|date:"b d"}}</h4>
 				<h4 class="distance" data-lat="{{show.gallery.lat}}" data-log="{{show.gallery.log}}"></h4>
 			</div>

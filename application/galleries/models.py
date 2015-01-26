@@ -144,7 +144,6 @@ class Gallery(models.Model):
 
 	def generateTimeDate(self):
 		myString = """
-		<h4 class="hours"
 			data-mons="%s" data-mone="%s" data-monstring="%s"
 			data-tues="%s" data-tuee="%s" data-tuestring="%s"
 			data-weds="%s" data-wede="%s" data-wedstring="%s"
@@ -152,7 +151,7 @@ class Gallery(models.Model):
 			data-fris="%s" data-frie="%s" data-fristring="%s"
 			data-sats="%s" data-sate="%s" data-satstring="%s"
 			data-suns="%s" data-sune="%s" data-sunstring="%s"
-		>getting time</h4>""" %(
+		""" %(
 			self.TimeToString(self.mon_start),self.TimeToString(self.mon_end),self.TimeToSoftString(self.mon_start,self.mon_end),
 			self.TimeToString(self.tue_start),self.TimeToString(self.tue_end),self.TimeToSoftString(self.tue_start,self.tue_end),
 			self.TimeToString(self.wed_start),self.TimeToString(self.wed_end),self.TimeToSoftString(self.wed_start,self.wed_end),

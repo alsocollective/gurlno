@@ -154,7 +154,9 @@ app.gallery = {
 	init: function() {
 		$("#gallerycontainer").addClass("nobackground");
 		app.gallery.exit.init();
+		app.gallery.initializeTimes();
 	},
+	// is what sets up and triggers the swipe away of the gallery
 	exit: {
 		init: function() {
 			$('#gallerycontainer .gallerywrapper').hammer().bind("panleft panright panstart panend", app.gallery.exit.event)
@@ -197,11 +199,11 @@ app.gallery = {
 			app.gallery.isLoading = true;
 			gallerycontainer[0].innerHTML = "";
 
-			//move the slider and container to the far right
+			//move the slider and container to the far left
 			gallerycontainer.addClass("show");
 			gallerycontainer[0].style.left = "0px";
 
-			// to prevent double loading of the same page...
+			// setup to prevent double loading of the same page...
 			gallerycontainer.addClass(target.id);
 			gallerycontainer.load("/currentshow/" + target.id, app.gallery.loading.sucess);
 
@@ -214,6 +216,24 @@ app.gallery = {
 		},
 		fail: function() {
 
+		}
+	},
+	initializeTimes: function() {
+		// get the varablese
+		var parent = $(".gallerywrapper"),
+			galleryid = parent.data().id,
+			galleryData = parent.find(".hours").data(),
+			day = app.galleryList.SETTINGS.day[new Date().getDay()];
+
+		// set the gallery opening time for the day
+		$(parent).find(".hours").html(galleryData[day + "string"])
+		// set distacne
+		$(parent).find(".distance").html($("#" + galleryid).find(".distance").html())
+		// check if the gallery is currently open
+		if ($("#" + galleryid).hasClass("doorsopen")) {
+			$(parent).find(".doorsopen").html("open");
+		} else {
+			$(parent).find(".doorsopen").html("closed");
 		}
 	}
 }

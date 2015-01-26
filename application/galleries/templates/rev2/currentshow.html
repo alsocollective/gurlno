@@ -1,10 +1,55 @@
 {% load thumbnail %}
 
-<div class="gallerywrapper">
+<div class="gallerywrapper" data-id="{{data.gal.slug}}">
 	<div>
-		<h2>{{data.gal}}</h2>
-		<h3>{{data.show}}</h3>
-		<img src="{{current_show.0.cover_work.Image|thumbnail_url:'normal'}}">
+		<!-- Gallery information -->
+		<span class="doorsopen"></span>
+		<br>
+		<span>{{data.gal}}</span>|
+		<span class="address">{{data.gal.address}}</span>|
+		<span class="distance"></span>
+		<br>
+		<span class="hours" {{ data.gal.timeDateAsString | safe}} ></span>
+		<br>		
+		<br>
+		<!-- show information -->
+		<span>{{data.show}}</span>
+		<br>
+		<!-- show all artists -->
+		{% with data.show.includes_artists.all as artists %}
+			{% if artists %}
+				<ul class="artists">
+				{% for artist in artists %}
+					<li>{{artist}}</li>
+				{% endfor %}
+				</ul>	
+			{% endif %}
+		{% endwith %}
+		<span class="showdates">{{data.show.date_start|date:"b d"}} &#8212; {{data.show.date_end|date:"b d"}}</span>
+		<br>
+
+		<!-- add facebook link if it exists, fallback is show link -->
+		{% if data.show.facebook %}
+			<span>{{data.show.facebook}}</span>
+		{% elif data.show.link %}
+			<span>{{data.show.link}}</span>
+		{% endif %}
+		<br>
+
+		{% if data.show.cover_work.Image %}
+			<img src="{{MEDIA_URL}}{{data.show.cover_work.Image}}">		
+		{% endif %}
+		<!-- show all of the images of work -->
+		<!-- this bit hasn't been tested... -->
+		{% with works as data.show.includes_works.all %}
+		    {% for work in works %}
+				<img src="{{MEDIA_URL}}{{work.Image}}">
+		    {% endfor %}
+		{% endwith %}
+		<br>
+		
+		<span class="showname">{{data.show}}</span><br>
+
 	</div>
 
 </div>
