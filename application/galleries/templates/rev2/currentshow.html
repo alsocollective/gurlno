@@ -47,9 +47,20 @@
 		    {% endfor %}
 		{% endwith %}
 		<br>
-		
-		<span class="showname">{{data.show}}</span><br>
 
+		Exhibition Profile
+		{{data.show.description}}
+		<!-- we need more details on this  -->
+		
+		<br>
+		upcomming shows
+		<br>
+		{% for show in data.upcoming %}
+			{% if show != data.show %}
+				{{show}}	
+			{% endif %}
+		{% endfor %}
+		
 	</div>
 
 </div>
