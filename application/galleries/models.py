@@ -136,10 +136,12 @@ class Gallery(models.Model):
 	sun_end = models.TimeField(blank=True,null=True)
 
 	timeDateAsString = models.TextField(max_length=1000,blank=True,null=True)
+	easyReadDate = models.TextField(max_length=1000,blank=True,null=True)
 
 	def save(self,*args, **kwargs):
 		self.slug = slugify(self.title)
 		self.generateTimeDate();
+		self.easyReadDate = self.generateEasyReadTime();
 		super(Gallery, self).save(*args, **kwargs)
 
 	def generateTimeDate(self):
@@ -162,6 +164,30 @@ class Gallery(models.Model):
 			)
 		self.timeDateAsString = myString
 
+	def generateEasyReadTime(self):
+		days = ["mon_start","tue_start","wed_start","thu_start","fri_start","sat_start","sun_start"]
+		dayse = ["mon_end","tue_end","wed_end","thu_end","fri_end","sat_end","sun_end"]
+		opens = []
+		for day in range(0,len(days)):
+			time = getattr(self,days[day])
+			endtime = getattr(self,dayse[day])
+			pc = len(opens)-1 #previous count
+			if(time != None):
+				if(len(opens)>0 and opens[pc]["c"]== day-1 and opens[pc]["t"]==time and opens[pc]["te"]==endtime):
+					opens[pc]["e"]=days[day]
+					opens[pc]["c"]=day
+				else:
+					opens.append({"s":days[day],"e":"","c":day,"t":time,"te":endtime})
+		out = "<ul>"
+		for op in opens:
+
+			out += "<li><span>%s:</span> %s</li>" %(self.dayToSoftString(op["s"][:3],op["e"][:3]),self.TimeToSoftString(op["t"],op["te"]))
+		return out + "</ul>"
+
+	def dayToSoftString(self,start,end):
+		if(not end):
+			return start
+		return "%s &#8212; %s" %(start,end)
 
 	def TimeToString(self,time):
 		if(not time):
@@ -177,6 +203,16 @@ class Gallery(models.Model):
 			return "CLOSED"
 		timeformat = "%I:%M%p"
 		return "%s &#8212; %s"%(time1.strftime(timeformat),time2.strftime(timeformat))
+
+	def open(self):
+		time = (datetime.timedelta(hours=-5) + datetime.datetime.now())
+		day = time.weekday()
+		days = ["mon_start","tue_start","wed_start","thu_start","fri_start","sat_start","sun_start"]
+		dayse = ["mon_end","tue_end","wed_end","thu_end","fri_end","sat_end","sun_end"]
+		if(time.time() < getattr(self,days[day]) and time.time() > getattr(self,dayse[day])):
+			return "galisopen"
+		return "galisclosed"
+
 
 	def __unicode__(self):
 		return self.title
@@ -247,6 +283,8 @@ class Show(models.Model):
 	opening_end_time = models.TimeField(blank=True,null=True)
 	cover = models.FloatField(default=0,blank=True,null=True)
 	description = models.TextField(max_length=1000,blank=True,null=True)
+	description_author = models.CharField(max_length=150,blank=True,null=True)	
+	description_link = models.URLField(blank=True)
 	link = models.URLField(blank=True)
 	includes_artists = models.ManyToManyField(Artist,blank=True,null=True)
 	cover_work = models.ForeignKey(WorkImage,blank=True,null=True,related_name="cover_work")
@@ -310,38 +348,18 @@ class Show(models.Model):
 			data-dayofweek="%d"
 		""" %(reception,opened,opened,starttime[0],endtime[0],softstring,daynumber)
 
-	# returns the eles as a html h4 element
-	# => <h4 data-open="18" data-close="20.5"> 6:00pm - 8:30pm </h4>
-	# => <h4> closed </h4>
-	def getHoursOpen(self):
-		out = "<h4  class='hours'> CLOSED </h4>"
-		#TODO set back time -10 to -5
+
+	def mountedAndOpening(self):
+		mounted = "notmounted"
+		opening = "notreception"
+
 		time = datetime.timedelta(hours=-5) + datetime.datetime.now()
-		if(self.opening_start and self.opening_start == time.date()):
-			start = self.TimeToString(self.opening_start_time)
-			if self.opening_end_time:
-				end = self.TimeToString(self.opening_end_time)
-			else:
-				end = [24,"unknown"]
-			out = "<h4 class='hours' data-start='%s' data-end='%s' >%s &#8212; %s</h4>" %(start[0],end[0],start[1],end[1])
-		else:
-			day = time.strftime("%a").lower()
-			#TODO remove the set day to friday...
-			day = "mon"
- 			starttime = self.gallery.__getattribute__("%s_start"%day)
-			endtime = self.gallery.__getattribute__("%s_end"%day)
-			if starttime:
-				if endtime:
-					start = self.TimeToString(starttime) 
-					end = self.TimeToString(endtime)					
-					out = "<h4 class='hours' data-start='%s' data-end='%s' >%s &#8212; %s</h4>" %(start[0],end[0],start[1],end[1])
-				else:
-					start = self.TimeToString(starttime) 
-					out = [24,"unknown"]
-					out = "<h4 class='hours' data-start='%s' data-end='%s' >%s &#8212; %s</h4>" %(start[0],end[0],start[1],end[1])
-		return out
+		if (self.date_start and self.date_start < time.date()):
+			mounted = "mounted"
+		if (self.opening_start and self.opening_start == time.date()):
+			opening = "reception"
 
-
+		return "%s %s"%(mounted,opening)
 
 	def TimeToString(self,time):
 		timeformat = "%I:%M%p"

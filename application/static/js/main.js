@@ -229,11 +229,5 @@ app.gallery = {
 		$(parent).find(".hours").html(galleryData[day + "string"])
 		// set distacne
 		$(parent).find(".distance").html($("#" + galleryid).find(".distance").html())
-		// check if the gallery is currently open
-		if ($("#" + galleryid).hasClass("doorsopen")) {
-			$(parent).find(".doorsopen").html("open");
-		} else {
-			$(parent).find(".doorsopen").html("closed");
-		}
 	}
 }

@@ -1,15 +1,41 @@
 {% load thumbnail %}
+{% load bohdanfilter %}
 
-<div class="gallerywrapper" data-id="{{data.gal.slug}}">
+<!--  
+we have 3 classes add at the head if it's open, mounted and opening 
+	positives
+		galisopen
+		mounted
+		reception
+	negatives
+		galisclosed
+		notmounted
+		notreception
+also stored as data the slug of the gallery
+-->
+<div class="gallerywrapper {{data.gal.open}} {{data.show.mountedAndOpening}}" data-id="{{data.gal.slug}}">
 	<div>
-		<!-- Gallery information -->
-		<span class="doorsopen"></span>
+		<!-- Gallery information 
+			use classes to determing what is show...	
+		-->
+		<span class="doorsopen">Open</span>
+		<span class="doorsclosed">Closed</span>
 		<br>
 		<span>{{data.gal}}</span>|
 		<span class="address">{{data.gal.address}}</span>|
+		<!-- distance is still being taken from the main list... will isolate this soon -->
 		<span class="distance"></span>
 		<br>
+		<!-- 
+			we use js to test if open and get hours of open,
+			this will be important for later on when we can scroll through time?
+		 -->
 		<span class="hours" {{ data.gal.timeDateAsString | safe}} ></span>
+
+		<!-- still need to fix it so from sun to mon it doesn't reset, not that big of a deal, no galleris do this. -->
+		<br>
+			{{ data.gal.easyReadDate|safe}}
+		<br>
 		<br>		
 		<br>
 		<!-- show information -->
@@ -48,10 +74,40 @@
 		{% endwith %}
 		<br>
 
+		<!-- desciption -->
 		Exhibition Profile
 		{{data.show.description}}
+		<br>
+			<!-- decription link and author --> 
+		{% if data.show.description_author%}
+			<span>
+			{% if data.show.description_link %}
+				<a href="{{data.show.description_link}}">
+			{% endif %}
+					{{data.show.description_author}}
+			{% if data.show.description_link %}
+				</a>
+			{% endif %}
+			</span>
+		{% endif %}
+
+
+		
+
 		<!-- we need more details on this  -->
 		
+		<br>
+		<br>
+
+		{% with data.show.includes_artists.all as artists %}
+			{% if artists %}
+				{% for artist in artists %}
+					<a href="{{artist|artistLink}}">{{artist}}</a>{% if not forloop.last %}, {% endif %}
+				{% endfor %}
+			{% endif %}
+		{% endwith %}
+
+		<br>
 		<br>
 		upcomming shows
 		<br>

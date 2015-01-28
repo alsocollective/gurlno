@@ -29,7 +29,7 @@ class gal_admin(admin.ModelAdmin):
 				("fri_start","fri_end"),
 				("sat_start","sat_end"),
 				("sun_start","sun_end"),
-				("timeDateAsString"),
+				("timeDateAsString","easyReadDate"),
 				("slug"),
 			]}
 		),]	
@@ -42,7 +42,7 @@ class show_admin(admin.ModelAdmin):
 				("title","gallery"),
 				("opening_start","opening_start_time"),("opening_end","opening_end_time"),				
 				("date_start","date_start_time"),("date_end","date_end_time"),
-				"description",
+				("description","description_author","description_link"),
 				"includes_artists",
 				"tags",
 				("cover_work","includes_works"),
