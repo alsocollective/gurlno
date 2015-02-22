@@ -12,32 +12,61 @@
 {% block content %}
 
 {% if user.username == "admin" %}
-admin only sees this : ) 
+<div id="adminbar">
+	<h2>admin bar</h2>
+	<ul>
+		<li><a href="/admin/galleries/">admin</a></li>
+		<li><a href="#" onclick="closeadmin();">close</a></li>
+	</ul>
+	<script type="text/javascript">
+		function closeadmin(){
+			var el = document.getElementById("adminbar");
+			el.parentNode.removeChild(el);
+		}
+	</script>
+</div> 
 {% endif %}
 
 <ul id="gallerylist">
-{% for show in data.shows %}
-	<li {{ show.checkIfOpen | safe}} id="{{show.gallery.slug}}">
-		<div class="time"></div>
-		<div>
-			<div class="upperdetails">
-				<h4{{ show.gallery.timeDateAsString | safe}} class="hours"></h4>
-				<h4 class="showlength">{{show.date_start|date:"b d"}} &#8212; {{show.date_end|date:"b d"}}</h4>
-				<h4 class="distance" data-lat="{{show.gallery.lat}}" data-log="{{show.gallery.log}}"></h4>
-			</div>
-			<div class="maindetails">
-				<h2 class="gallerytitle">{{show.gallery}}</h2>
-				<h3 class="showtitle">{{show}}</h2>
-			</div>
-			{% if user.username == "admin" %}
-				<div class="admin">
-					<h4><a href="/admin/galleries/gallery/{{show.gallery.pk}}/" target="_blank">gal</a></h4>
-					<h4><a href="/admin/galleries/show/{{show.pk}}/" target="_blank">sho</a></h4>
+{% for gal in data.galleries %}
+	{% with gal.next_show as show %}
+		{% if show %}
+			<li {{ show.checkIfOpen | safe}} id="{{gal.slug}}">
+		{% else %}
+			<li class="gallery noshow" id="{{gal.slug}}">
+		{% endif %}
+
+			<div class="time"></div>
+			<div>
+				<div class="upperdetails">
+					<h4{{ gal.timeDateAsString | safe}} class="hours"></h4>
+					{% if show %}
+						<h4 class="showlength">{{show.date_start|date:"b d"}} &#8212; {{show.date_end|date:"b d"}}</h4>
+					{% else %}
+						<h4 class="showlength"></h4>
+					{% endif %}
+						<h4 class="distance" data-lat="{{gal.lat}}" data-log="{{gal.log}}"></h4>
+
 				</div>
-			{% endif %}
-		</div>
-		
-	</li>
+				<div class="maindetails">
+					<h2 class="gallerytitle">{{gal}}</h2>
+					{% if show %}	
+						<h3 class="showtitle">{{show}}</h2>
+					{% endif %}
+
+				</div>
+				{% if user.username == "admin" %}
+					<div class="admin">
+						<h4><a href="/admin/galleries/gallery/{{gal.pk}}/" target="_blank">gal</a></h4>
+						{% if show %}
+							<h4><a href="/admin/galleries/show/{{show.pk}}/" target="_blank">sho</a></h4>
+						{% endif %}
+					</div>
+				{% endif %}
+			</div>
+			
+		</li>
+	{% endwith %}
 {% endfor %}
 </ul>
 <div id="gallerycontainer">

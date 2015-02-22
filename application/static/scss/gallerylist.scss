@@ -11,6 +11,8 @@ a{
 
 .gallery{
 	position: relative;
+	// max-width: $maxwidth;
+	// margin: 0 auto;	
 	padding: 0.5em 0;
 	color: #000;
 	background: $lightGrey;
@@ -21,6 +23,7 @@ a{
 	h2,h3,h4{
 		display: inline;
 	}
+
 	> div{
 		position: relative;
 	}

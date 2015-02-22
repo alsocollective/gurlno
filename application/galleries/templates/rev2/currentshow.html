@@ -1,6 +1,7 @@
 {% load thumbnail %}
 {% load bohdanfilter %}
 
+<span>
 <!--  
 we have 3 classes add at the head if it's open, mounted and opening 
 	positives
@@ -13,110 +14,124 @@ we have 3 classes add at the head if it's open, mounted and opening
 		notreception
 also stored as data the slug of the gallery
 -->
+</span>
 <div class="gallerywrapper {{data.gal.open}} {{data.show.mountedAndOpening}}" data-id="{{data.gal.slug}}">
 	<div>
-		<!-- Gallery information 
-			use classes to determing what is show...	
-		-->
-		<span class="doorsopen">Open</span>
-		<span class="doorsclosed">Closed</span>
-		<br>
-		<span>{{data.gal}}</span>|
-		<span class="address">{{data.gal.address}}</span>|
-		<!-- distance is still being taken from the main list... will isolate this soon -->
-		<span class="distance"></span>
-		<br>
-		<!-- 
-			we use js to test if open and get hours of open,
-			this will be important for later on when we can scroll through time?
-		 -->
-		<span class="hours" {{ data.gal.timeDateAsString | safe}} ></span>
-
-		<!-- still need to fix it so from sun to mon it doesn't reset, not that big of a deal, no galleris do this. -->
-		<br>
-			{{ data.gal.easyReadDate|safe}}
-		<br>
-		<br>		
-		<br>
-		<!-- show information -->
-		<span>{{data.show}}</span>
-		<br>
-		<!-- show all artists -->
-		{% with data.show.includes_artists.all as artists %}
-			{% if artists %}
-				<ul class="artists">
-				{% for artist in artists %}
-					<li>{{artist}}</li>
-				{% endfor %}
-				</ul>	
-			{% endif %}
-		{% endwith %}
-		<span class="showdates">{{data.show.date_start|date:"b d"}} &#8212; {{data.show.date_end|date:"b d"}}</span>
-		<br>
-
-		<!-- add facebook link if it exists, fallback is show link -->
-		{% if data.show.facebook %}
-			<span>{{data.show.facebook}}</span>
-		{% elif data.show.link %}
-			<span>{{data.show.link}}</span>
-		{% endif %}
-		<br>
-
-		{% if data.show.cover_work.Image %}
-			<img src="{{MEDIA_URL}}{{data.show.cover_work.Image}}">		
-		{% endif %}
-		<!-- show all of the images of work -->
-		<!-- this bit hasn't been tested... -->
-		{% with works as data.show.includes_works.all %}
-		    {% for work in works %}
-				<img src="{{MEDIA_URL}}{{work.Image}}">
-		    {% endfor %}
-		{% endwith %}
-		<br>
-
-		<!-- desciption -->
-		Exhibition Profile
-		{{data.show.description}}
-		<br>
-			<!-- decription link and author --> 
-		{% if data.show.description_author%}
-			<span>
-			{% if data.show.description_link %}
-				<a href="{{data.show.description_link}}">
-			{% endif %}
-					{{data.show.description_author}}
-			{% if data.show.description_link %}
-				</a>
-			{% endif %}
+		
+		<div class="gallerydetails">
+			<!-- Gallery information 
+				use classes to determing what is show...	
+			-->			
+			<span class="doorsopen">Open</span>
+			<span class="doorsclosed">Closed</span>
+			<span class="titleline">
+				<span class="galtitle">{{data.gal}}</span> |
+				<span class="subtitle">
+					<span class="address">{{data.gal.address}}</span> | 
+					<!-- distance is still being taken from the main list... will isolate this soon -->
+					<span class="distance"></span>
+				</span>
 			</span>
-		{% endif %}
+			<!-- 
+				we use js to test if open and get hours of open,
+				this will be important for later on when we can scroll through time?
+			 -->
+			<span class="hours" {{ data.gal.timeDateAsString | safe}} ></span>
+
+			<!-- still need to fix it so from sun to mon it doesn't reset, not that big of a deal, no galleris do this. -->
+			<span class="daysopen">{{ data.gal.easyReadDate|safe}}</span>
+		</div>
+		<div class="showdetails">
+			<!-- show information -->
+			<span class="showtitle">{{data.show}}</span>
+			<!-- show all artists -->
+			{% with data.show.includes_artists.all as artists %}
+				{% if artists %}
+					<ul class="artists">
+					{% for artist in artists %}
+						<li>{{artist.name|safe}}{% if not forloop.last %},{% endif %}</li>
+					{% endfor %}
+					</ul>	
+				{% endif %}
+			{% endwith %}
+			<span class="showdates">{{data.show.date_start|date:"d F"}} &#8212; {{data.show.date_end|date:"d F"}}</span>
+			<!-- add facebook link if it exists, fallback is show link -->
+			<div class="eventlink">
+				{% if data.show.facebook %}
+					<a href="{{data.show.facebook}}">Facebook Event Link</a>
+				{% elif data.show.link %}
+					<a href="{{data.show.link}}">Event Website</a>
+				{% endif %}
+			</div>
+		</div>
+		<div class="images">
+			{% if data.show.cover_work.Image %}
+				<img src="{{MEDIA_URL}}{{data.show.cover_work.Image}}">		
+			{% endif %}
+			<!-- show all of the images of work -->
+			<!-- this bit hasn't been tested... -->
+			{% with works as data.show.includes_works.all %}
+			    {% for work in works %}
+					<img src="{{MEDIA_URL}}{{work.Image}}">
+			    {% endfor %}
+			{% endwith %}
+		</div>
+
+		<div class="exdetails">
+			<!-- desciption -->
+			<span class="title">Exhibition Profile</span>
+			<p>
+				{{data.show.description | safe}}
+			</p>
+				<!-- decription link and author --> 
+			{% if data.show.description_author%}
+				<span class="author">
+					By: {{data.show.description_author}} 
+				{% if data.show.description_link %}
+					<a href="{{data.show.description_link}}">continue reading...</a>
+				{% endif %}
+				</span>
+			{% endif %}
 
 
-		
+			
 
-		<!-- we need more details on this  -->
-		
-		<br>
-		<br>
+			<!-- we need more details on this  -->
+			<span class="title">Artists Links</span>
+			<ul>
+			{% with data.show.includes_artists.all as artists %}
+				{% if artists %}
+					{% for artist in artists %}
+						<li>{{artist.nameLink | safe}}{% if not forloop.last %}, {% endif %}</li>
+					{% endfor %}
+				{% endif %}
+			{% endwith %}
+			</ul>
+		</div>
 
-		{% with data.show.includes_artists.all as artists %}
-			{% if artists %}
-				{% for artist in artists %}
-					<a href="{{artist|artistLink}}">{{artist}}</a>{% if not forloop.last %}, {% endif %}
+		{% if data.upcoming.count > 1%}
+			<div class="upcoming">
+				<span class="title">Upcoming</span>
+				<ul>
+				{% for show in data.upcoming %}
+					{% if show != data.show %}
+						<li>
+							{{show}}
+							{% if show.date_start %}
+								: {{show.date_start|date:"d F"}} 
+							{% endif %}
+							{% if show.date_end %}
+								&#8212; {{show.date_end|date:"d F"}}
+							{% endif %}
+							{% if show.date_start %}
+							, {{show.date_start|date:"Y"}}
+							{% endif %}
+						</li>
+					{% endif %}
 				{% endfor %}
-			{% endif %}
-		{% endwith %}
-
-		<br>
-		<br>
-		upcomming shows
-		<br>
-		{% for show in data.upcoming %}
-			{% if show != data.show %}
-				{{show}}	
-			{% endif %}
-		{% endfor %}
-		
+				</ul>
+			</div>
+		{% endif %}
 	</div>
 
 </div>

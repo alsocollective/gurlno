@@ -48,6 +48,28 @@ class Artist(models.Model):
 	def __unicode__(self):
 		return self.slug
 
+	def firstLink(self):
+		if self.website:
+			return self.website
+		if self.facebook:
+			return self.facebook
+		if self.tublr:
+			return self.tublr
+		if self.instagram:
+			return self.instagram
+		if self.twitter:
+			return self.twitter
+		return False
+
+	def name(self):
+		return "%s %s" %(self.first_name, self.last_name)
+
+	def nameLink(self):
+		link = self.firstLink()
+		if link:
+			return "<a href='%s'>%s %s</a>" %(link,self.first_name, self.last_name)
+		return self.name()
+
 class Gallorist(models.Model):
 	prefix = models.CharField(max_length=50)
 	first_name = models.CharField(max_length=50)
@@ -138,6 +160,8 @@ class Gallery(models.Model):
 	timeDateAsString = models.TextField(max_length=1000,blank=True,null=True)
 	easyReadDate = models.TextField(max_length=1000,blank=True,null=True)
 
+	next_show = models.ForeignKey('Show',null=True,blank=True,related_name="the_most_recent_show")
+
 	def save(self,*args, **kwargs):
 		self.slug = slugify(self.title)
 		self.generateTimeDate();
@@ -205,13 +229,20 @@ class Gallery(models.Model):
 		return "%s &#8212; %s"%(time1.strftime(timeformat),time2.strftime(timeformat))
 
 	def open(self):
-		time = (datetime.timedelta(hours=-5) + datetime.datetime.now())
-		day = time.weekday()
-		days = ["mon_start","tue_start","wed_start","thu_start","fri_start","sat_start","sun_start"]
-		dayse = ["mon_end","tue_end","wed_end","thu_end","fri_end","sat_end","sun_end"]
-		if(time.time() < getattr(self,days[day]) and time.time() > getattr(self,dayse[day])):
-			return "galisopen"
-		return "galisclosed"
+		try:
+			time = (datetime.timedelta(hours=-5) + datetime.datetime.now())
+			day = time.weekday()
+			days = ["mon_start","tue_start","wed_start","thu_start","fri_start","sat_start","sun_start"]
+			dayse = ["mon_end","tue_end","wed_end","thu_end","fri_end","sat_end","sun_end"]
+			if getattr(self,days[day]) == None:
+				return "galisclosed"
+			if(time.time() < getattr(self,days[day]) and time.time() > getattr(self,dayse[day])):
+				return "galisopen"
+			return "galisclosed"
+		except Exception, e:
+			print e
+			return "error"
+
 
 
 	def __unicode__(self):
@@ -379,4 +410,8 @@ class Show(models.Model):
 
 	def save(self,*args, **kwargs):
 		self.slug = slugify(self.title)
+		show = Show.objects.all().filter(date_end__gte=datetime.datetime.now(),gallery=self.gallery).order_by("date_start")[0]
+		self.gallery.next_show = show
+		self.gallery.save()
+
 		super(Show, self).save(*args, **kwargs)

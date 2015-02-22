@@ -133,9 +133,14 @@ app.galleryList = {
 			if (app.galleryList.galleryLoad.galleryContainer == false) {
 				app.galleryList.galleryLoad.galleryContainer = $("#gallerycontainer")[0];
 			}
+			if(ev.type == "panstart"){
+				// $(app.galleryList.galleryLoad.galleryContainer).addClass("grabed")
+			}
 			if (ev.gesture.isFinal) {
 				// TODO might want to change the trigger to momentum rather than width...
-				if (ev.gesture.deltaX < ev.currentTarget.clientWidth / -4) {
+				// $(app.galleryList.galleryLoad.galleryContainer).removeClass("grabed")
+				if (ev.gesture.deltaX < ev.currentTarget.clientWidth / -4 && !$(ev.currentTarget).hasClass("noshow")) {
+					console.log(ev.currentTarget)
 					app.gallery.loading.init(ev.currentTarget);
 				} else {
 					ev.currentTarget.style.left = 0;

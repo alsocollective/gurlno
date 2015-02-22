@@ -1,49 +1,225 @@
-#gallerycontainer{
-	position: absolute;
-	top: 0;
-	left: 100%;
-	height: 100%;
-	height: 100vh;
-	width: 100%;
-	width: 100vw;
-	background: $lightGrey;
+/*
+   _____ _    _ _____  _        _   _  ____  
+  / ____| |  | |  __ \| |      | \ | |/ __ \ 
+ | |  __| |  | | |__) | |      |  \| | |  | |
+ | | |_ | |  | |  _  /| |      | . ` | |  | |
+ | |__| | |__| | | \ \| |____  | |\  | |__| |
+  \_____|\____/|_|  \_\______| |_| \_|\____/ 
 
-	&.nobackground{
-		background: transparent;
-	}
+  Gallery
+*/
 
-	&.show{
-		left: 0px;
-		-webkit-transition: left 0.25s ease-out;
-		-moz-transition: left 0.25s ease-out;
-		-o-transition: left 0.25s ease-out;
-		transition: left 0.25s ease-out;		
-	}
-
-	.gallerywrapper{
-		background: $lightGrey;
-		width: 100%;
+// This is fundamental function to the slidding page... don't change...
+// DO NOT EDIT TILL THE DOC SAYS YOU CAN!!!
+	#gallerycontainer{
+		position: absolute;
+		top: 0;
+		left: 100%;
 		height: 100%;
-		position: relative;
-		> div{
-			-webkit-animation: fadein 1s forwards;
-			animation: fadein 1s forwards;	
+		height: 100vh;
+		width: 100%;
+		width: 100vw;
+		background: #fff;
+		overflow: scroll;
+		overflow-x: hidden;
+		-webkit-overflow-scrolling: touch;
+
+
+		&.nobackground{
+			background: transparent;
+		}
+
+		&.show{
+			display: block;
+			left: 0px;
+			-webkit-transition: left 0.25s ease-out;
+			-moz-transition: left 0.25s ease-out;
+			-o-transition: left 0.25s ease-out;
+			transition: left 0.25s ease-out;		
+		}
+
+		.gallerywrapper{
+			background: #fff;
+			width: 100%;
+			overflow: hidden;
+			// height: 100%;
+			position: relative;
+			min-height: 100%;
+			min-height: 100vh;
+			> div{
+				padding-top: 2em;
+				max-width: 90%;
+				max-width: $maxwidth;
+				margin: 0 auto;
+				-webkit-animation: fadein 1s forwards;
+				animation: fadein 1s forwards;	
+			}	
 		}	
-	}	
 
-	p{
-		margin: 0;
+		p{
+			margin: 0;
+		}
 	}
-}
-
-
 // for the fading in of the text after it's loaded
-@-webkit-keyframes fadein {
-	0%   {opacity: 0;}
-	100% {opacity: 1;}
-}
+	@-webkit-keyframes fadein {
+		0%   {opacity: 0;}
+		100% {opacity: 1;}
+	}
 
-@keyframes fadein {
-	0%   {opacity: 0;}
-	100% {opacity: 1;}
-}
+	@keyframes fadein {
+		0%   {opacity: 0;}
+		100% {opacity: 1;}
+	}
+
+// EDIT!! AFTER THIS ONLY!!!!
+
+
+// Closed or Open
+	.doorsclosed,.doorsopen{
+		font-size: $small;
+	}
+	.doorsclosed{
+		display: none;		
+	}
+	.doorsopen{
+		display: block;
+	}
+	.galisclosed{
+		.doorsclosed{
+			display: block;		
+		}
+		.doorsopen{
+			display: none;
+		}
+		.hours{
+			color: #fff;
+			opacity: 0;
+		}
+	}
+
+// Gallery Title and location
+	.gallerywrapper{
+		font-size: 1.2em;
+		overflow: hidden;
+		overflow-y: scroll;
+
+		.greyed{
+			color:$lightGrey;
+		}
+
+		.indented{
+			padding-left: 15%;
+			width: 85%;
+		}
+
+		.gallerydetails{
+			.galtitle{
+				font-weight: bolder;
+			}
+			.titleline{
+				font-size: $large;
+				line-height: 1.1em;
+			}
+			.subtitle{
+				color: $lightGrey;
+				font-size: 0.9em;
+			}
+			.hours{
+				display: block;
+				font-size: $small;
+				text-transform: lowercase;
+			}
+			.daysopen{
+				color:$lightGrey;
+				font-size: $small;
+				display: block;
+				padding-top: 7px;
+				li > span{
+					font-weight: bolder;
+				}
+			}
+		}
+
+		.showdetails{
+			padding-top: 4em;
+			@extend .indented;
+			.showtitle{
+				display: block;
+				font-style: italic;
+				font-size: $large;
+			}
+			.artists{
+				font-size: $small;
+				line-height: 0.95em;
+				margin-bottom: -2px;
+				li{
+					font-size: $small;
+					display: inline;
+				}
+			}
+			.showdates{
+				font-size: $small;
+				display: block;
+				margin-bottom: -3px;
+			}
+			.eventlink{
+				font-size: $small;
+				font-weight: bold;
+				font-style: italic;
+				a{
+					text-decoration: underline;
+					font-size: $small;
+				}
+			}
+		}
+
+		.images{
+			img{
+				width: 100%;
+			}
+		}
+
+		.exdetails{
+			padding-top: 2em; 
+			.title{
+				font-weight: bolder;
+				display: block;
+				padding-top: 1.5em;
+			}
+
+			ul, p {
+				@extend .indented;
+				font-size: $small;
+				li{
+					color:$lightGrey;
+					display: inline-block;
+					a{
+						text-decoration: underline;
+					}
+				}
+			}
+			.author{
+				@extend .indented;
+				font-size: $small;				
+				color:$lightGrey;
+				display: block;
+				a{
+					text-decoration: underline;
+				}
+			}
+		}
+		.upcoming{
+			padding: 4em 0; 
+			.title{
+				font-weight: bolder;
+				display: block;
+				padding-top: 1.5em;
+			}
+			ul{
+				@extend .indented;
+				font-size: $small;
+			}
+
+		}
+
+	}
