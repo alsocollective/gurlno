@@ -410,8 +410,10 @@ class Show(models.Model):
 
 	def save(self,*args, **kwargs):
 		self.slug = slugify(self.title)
-		show = Show.objects.all().filter(date_end__gte=datetime.datetime.now(),gallery=self.gallery).order_by("date_start")[0]
-		self.gallery.next_show = show
-		self.gallery.save()
+		show = Show.objects.all().filter(date_end__gte=datetime.datetime.now(),gallery=self.gallery).order_by("date_start")
+		if(show):
+			show = show[0]
+			self.gallery.next_show = show
+			self.gallery.save()
 
 		super(Show, self).save(*args, **kwargs)
